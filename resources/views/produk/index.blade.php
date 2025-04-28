@@ -121,15 +121,7 @@
                     <option value="out_of_stock">Stok Habis</option>
                 </select>
             </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filter_kategori" aria-label="Filter by Category">
-                    <option selected>Kategori Produk</option>
-                    {{-- @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach --}}
-                </select>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-7">
                 <input type="text" id="search_produk" class="form-control" placeholder="Cari Nama Produk" aria-label="Search Product">
             </div>
             <div class="col-md-1">
@@ -150,7 +142,8 @@
 
     <div class="table-responsive text-nowrap mt-3">
         <table class="table">
-<thead>
+            <thead>
+            {{-- <thead class="table-light">  --}}
                     <tr>
                         <th>Kode Produk</th>
                         <th>Produk</th>
@@ -163,7 +156,7 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="table-border-bottom-0">
+                <tbody class="table-border-bottom-0" id="table-produk">
                     @foreach ($produk as $product)
                         <tr>
                             <td>{{ $product->kode_produk }}</td>
@@ -181,7 +174,7 @@
                                 @endif
                             </td>
                             <td>{{ $product->min_stok }}</td>
-                            <td>{{ Str::limit($product->deskripsi, 50) }}</td>
+                            <td>{{ Str::limit($product->deskripsi, 50, '...') }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -201,7 +194,8 @@
                     @endforeach
                 </tbody>
             </table>
-    </div>
+        </div>
+   </div>
 </div>
 
 <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
@@ -218,7 +212,82 @@
         });
     }
 
-    
+    $(document).ready(function() {
+        function loadProduk() {
+            let filter_stok = $('#filter_stok').val();
+            let search_produk = $('#search_produk').val();
+            let per_page = $('#per_page').val();
+
+            $.ajax({
+                url: "{{ route('produk.list') }}",
+                data: {
+                    filter_stok: filter_stok,
+                    search_produk: search_produk,
+                    per_page: per_page
+                },
+                success: function(response) {
+                    let html = '';
+
+                    response.produk.forEach(function(item) {
+                        let statusStok = '';
+                        if (item.stok == 0) {
+                            statusStok = '<span class="badge bg-label-danger">Habis</span>';
+                        } else if (item.stok <= item.min_stok) {
+                            statusStok = '<span class="badge bg-label-warning">Rendah</span>';
+                        } else {
+                            statusStok = '<span class="badge bg-label-success">Tersedia</span>';
+                        }
+
+                        html += `
+                            <tr>
+                                <td>${item.kode_produk}</td>
+                                <td>${item.nama_produk}</td>
+                                <td>Rp${Number(item.hpp).toLocaleString('id-ID')}</td>
+                                <td>Rp${Number(item.harga).toLocaleString('id-ID')}</td>
+                                <td>${item.stok}</td>
+                                <td>${statusStok}</td>
+                                <td>${item.min_stok}</td>
+                                <td>${item.deskripsi ? item.deskripsi.substring(0, 50) + '...' : ''}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('produk') }}/${item.produk_id}/edit')">
+                                                <i class="bx bx-edit-alt me-1"></i> Edit
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('produk') }}/${item.produk_id}/delete')">
+                                                <i class="bx bx-trash me-1"></i> Hapus
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    $('#table-produk').html(html);
+                    $('#pagination-produk').html(response.pagination); 
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    alert('Gagal memuat data produk.');
+                }
+            });
+        }
+
+        loadProduk();
+
+        $('#filter_stok, #per_page').on('change', function() {
+            loadProduk();
+        });
+
+        $('#search_produk').on('keyup', function() {
+            loadProduk();
+        });
+    });
+
     $(document).on('submit', 'form', function(e) {
         e.preventDefault();
         let form = $(this);
@@ -239,7 +308,6 @@
             success: function(res) {
                 if (res.status) {
                     $('#myModal').modal('hide');
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil',
@@ -247,18 +315,15 @@
                         timer: 2000,
                         showConfirmButton: false
                     });
-
                     setTimeout(function() {
-                        window.location.reload(); 
+                        window.location.reload();
                     }, 2100);
-
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
                         text: res.message
                     });
-
                     if (res.msgField) {
                         $('.error-text').text('');
                         $.each(res.msgField, function(prefix, val) {
@@ -278,4 +343,3 @@
     });
 </script>
 @endpush
-

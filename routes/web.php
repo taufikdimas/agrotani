@@ -56,7 +56,7 @@ Route::prefix('hutang')->group(function () {
 
 Route::prefix('produk')->group(function () {
     Route::get('/', [ProdukController::class, 'index']);
-    Route::get('/list', [ProdukController::class, 'list']);
+    Route::get('/produk/list', [ProdukController::class, 'list'])->name('produk.list');
     Route::get('/create', [ProdukController::class, 'create']);
     Route::post('/', [ProdukController::class, 'store']);
     Route::get('/{id}/edit', [ProdukController::class, 'edit']);
