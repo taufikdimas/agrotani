@@ -18,8 +18,22 @@ class Customer extends Model
     ];
     protected $primaryKey = 'customer_id';
 
-    public function sales()
+    // Relasi ke Penjualan
+    public function penjualan()
     {
-        return $this->hasMany(Penjualan::class);
+        return $this->hasMany(Penjualan::class, 'customer_id', 'customer_id');
+    }
+
+    // Relasi ke DetailPenjualan (melalui Penjualan)
+    public function detailPenjualan()
+    {
+        return $this->hasManyThrough(
+            DetailPenjualan::class,
+            Penjualan::class,
+            'customer_id', // Foreign key pada Penjualan
+            'penjualan_id', // Foreign key pada DetailPenjualan
+            'customer_id',  // Local key pada Customer
+            'penjualan_id'  // Local key pada Penjualan
+        );
     }
 }
