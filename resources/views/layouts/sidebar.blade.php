@@ -81,14 +81,14 @@
     </li>
 
     <!-- Hutang & Piutang -->
-    <li class="menu-item {{ request()->is('hutang*') || request()->is('piutang*') ? 'active open' : '' }}">
+    <li class="menu-item {{ request()->is('hutang*') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-wallet"></i>
         <div>Hutang & Piutang</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {{ request()->is('marketing*') ? 'active' : '' }}">
-          <a href="{{ route('marketing.index') }}" class="menu-link">
+        <li class="menu-item {{ request()->is('hutang/hutang-customer*') ? 'active' : '' }}">
+          <a href="{{ url('/hutang/hutang-customer') }}" class="menu-link">
             <div>Hutang Customer</div>
           </a>
         </li>
