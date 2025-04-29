@@ -1,4 +1,4 @@
-@empty($penjualan)
+@empty($piutang)
     <div id="modal-master" class="modal-dialog modal-lg ajax-form" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,31 +8,39 @@
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan</h5>
-                    Data penjualan yang anda cari tidak ditemukan
+                    Data piutang yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/penjualan') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/piutang') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <form action="{{ url('/penjualan/' . $penjualan->penjualan_id . '/delete') }}" class="ajax-form" method="POST" id="ajax-form">
+    <form action="{{ url('/piutang/' . $piutang->piutang_id . '/delete') }}" method="POST" class="ajax-form" id="form-delete-piutang">
         @csrf
         @method('DELETE')
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Hapus Data Penjualan</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Hapus Data Piutang</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning">
                         <h5><i class="icon fas fa-ban"></i> Konfirmasi</h5>
-                        Apakah Anda yakin ingin menghapus transaksi berikut?
+                        Apakah Anda yakin ingin menghapus data piutang berikut?
                     </div>
                     <table class="table table-sm table-bordered table-striped">
                         <tr>
-                            <th class="text-right col-4">Kode Transaksi:</th>
-                            <td class="col-8">{{ $penjualan->kode_transaksi }}</td>
+                            <th class="text-right col-4">Nama Pemilik Piutang:</th>
+                            <td class="col-8">{{ $piutang->nama }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-right">Tanggal Order:</th>
+                            <td>{{ $piutang->tanggal_order }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-right">Tagihan:</th>
+                            <td>Rp {{ number_format($piutang->tagihan, 0, ',', '.') }}</td>
                         </tr>
                     </table>
                 </div>

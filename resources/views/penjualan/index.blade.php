@@ -162,12 +162,18 @@
 
         <div class="row px-6">
             @foreach($penjualans as $penjualan)
+            {{-- @dd($penjualan->toArray()) --}}
                 <div class="col-md-12 mb-4">
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-9">
-                                    <h5 class="card-title">Kode Transaksi: {{ $penjualan['kode_transaksi'] }}</h5>
+                                <div class="col-9 d-flex align-items-center gap-2">
+                                    <h5 class="card-title mb-0"><strong>{{ $penjualan['kode_transaksi'] }}</strong></h5>
+                                    @if (strtolower($penjualan['status_order']) == 'selesai')
+                                        <span class="badge bg-label-success">SELESAI</span>
+                                    @else
+                                        <span class="badge bg-label-danger">RETUR</span>
+                                    @endif
                                 </div>
                                 <div class="col-3">
                                     <div class="d-flex justify-content-end mb-2">
@@ -185,6 +191,7 @@
                             <div class="row">
                                 <div class="col-7">
                                     <p><strong>Nama Customer:</strong> {{ $penjualan['customer']['nama_customer'] }}</p>
+                                    <p><strong>Nama Marketing:</strong> {{ $penjualan->marketing?->nama_marketing ?? '-' }}</p>
                                     <p><strong>Tanggal Transaksi:</strong> {{ \Carbon\Carbon::parse($penjualan['tanggal_transaksi'])->format('d-m-Y') }}</p>
                                     <p><strong>Status Pembayaran:</strong>
                                         @if (strtolower($penjualan['status_pembayaran']) == 'lunas')

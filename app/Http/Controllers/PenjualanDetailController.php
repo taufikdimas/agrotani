@@ -58,7 +58,6 @@ class PenjualanDetailController extends Controller
             'jumlah' => 'required|integer|min:1',
         ]);
 
-        // Create stock out record
         Stok::create([
             'produk_id' => $request->produk_id,
             'kategori' => 'out',
@@ -66,7 +65,6 @@ class PenjualanDetailController extends Controller
             'deskripsi' => 'Penjualan',
         ]);
 
-        // Update product stock quantity
         $produk = Produk::find($request->produk_id);
         $produk->stok -= $request->jumlah;
         $produk->save();
@@ -90,11 +88,6 @@ class PenjualanDetailController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan']);
-    }
-
-    public function calculate_stock()
-    {
-
     }
 
 }

@@ -22,4 +22,9 @@ class Marketing extends Model
     {
         return $this->hasMany(MarketingReport::class, 'marketing_id');
     }
+
+    public function penjualan()
+{
+    return $this->hasMany(Penjualan::class, 'marketing_id');
+}
 }

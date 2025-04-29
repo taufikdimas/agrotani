@@ -5,178 +5,201 @@
 @section('title', 'Dashboard.index')
 
 @section('content')
+@php
+function trendClass($value) {
+    return $value >= 0 ? 'text-success' : 'text-danger';
+}
+function trendIcon($value) {
+    return $value >= 0 ? 'bx-trending-up' : 'bx-trending-down';
+}
+@endphp
   <div class="row">
-    <div class="col-lg-3 col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="card-info">
-              <p class="text-heading mb-1">Session</p>
-              <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">58,352</h4>
-                <span class="text-success">(+29%)</span>
+      {{-- Jumlah Order --}}
+      <div class="col-lg-3 col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div class="card-info">
+                <p class="text-heading mb-1">Jumlah Order</p>
+                <div class="d-flex align-items-center mb-1">
+                  <h4 class="card-title mb-0 me-2">{{ number_format($jumlahOrder) }}</h4>
+                  <span class="{{ trendClass($persenOrder) }}">({{ $persenOrder }}%)</span>
+                </div>
+                <span>Periode saat ini</span>
               </div>
-              <span>Last Week Analytics</span>
-            </div>
-            <div class="card-icon">
-              <span class="badge bg-label-primary rounded p-2">
-                <i class="icon-base bx bx-trending-up icon-lg"></i>
-              </span>
+              <div class="card-icon">
+                <span class="badge bg-label-primary rounded p-2">
+                  <i class="icon-base bx {{ trendIcon($persenOrder) }} icon-lg"></i>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="card-info">
-              <p class="text-heading mb-1">Time On Site</p>
-              <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">28m 14s</h4>
-                <span class="text-success">(+18%)</span>
+
+      {{-- Penjualan Kotor --}}
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div class="card-info">
+                <p class="text-heading mb-1">Penjualan Kotor</p>
+                <div class="d-flex align-items-center mb-1">
+                  <h4 class="card-title mb-0 me-2">Rp{{ number_format($penjualanKotor, 0, ',', '.') }}</h4>
+                  <span class="{{ trendClass($persenKotor) }}">({{ $persenKotor }}%)</span>
+                </div>
+                <span>Periode saat ini</span>
               </div>
-              <span>Last Day Analytics</span>
-            </div>
-            <div class="card-icon">
-              <span class="badge bg-label-info rounded p-2">
-                <i class="icon-base bx bx-time-five icon-lg"></i>
-              </span>
+              <div class="card-icon">
+                <span class="badge bg-label-info rounded p-2">
+                  <i class="icon-base bx {{ trendIcon($persenKotor) }} icon-lg"></i>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="card-info">
-              <p class="text-heading mb-1">Bounce Rate</p>
-              <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">62%</h4>
-                <span class="text-danger">(-14%)</span>
+
+      {{-- Penjualan Bersih --}}
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div class="card-info">
+                <p class="text-heading mb-1">Penjualan Bersih</p>
+                <div class="d-flex align-items-center mb-1">
+                  <h4 class="card-title mb-0 me-2">Rp{{ number_format($penjualanBersih, 0, ',', '.') }}</h4>
+                  <span class="{{ trendClass($persenBersih) }}">({{ $persenBersih }}%)</span>
+                </div>
+                <span>Periode saat ini</span>
               </div>
-              <span>Last Week Analytics</span>
-            </div>
-            <div class="card-icon">
-              <span class="badge bg-label-danger rounded p-2">
-                <i class="icon-base bx bx-pie-chart-alt icon-lg"></i>
-              </span>
+              <div class="card-icon">
+                <span class="badge bg-label-success rounded p-2">
+                  <i class="icon-base bx {{ trendIcon($persenBersih) }} icon-lg"></i>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="card-info">
-              <p class="text-heading mb-1">Users</p>
-              <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">18,472</h4>
-                <span class="text-success">(+42%)</span>
+
+      {{-- Order Retur --}}
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div class="card-info">
+                <p class="text-heading mb-1">Order Retur</p>
+                <div class="d-flex align-items-center mb-1">
+                  <h4 class="card-title mb-0 me-2">{{ number_format($orderRetur) }}</h4>
+                  <span class="{{ trendClass($persenRetur) }}">({{ $persenRetur }}%)</span>
+                </div>
+                <span>Periode saat ini</span>
               </div>
-              <span>Last Year Analytics</span>
-            </div>
-            <div class="card-icon">
-              <span class="badge bg-label-success rounded p-2">
-                <i class="icon-base bx bx-user icon-lg"></i>
-              </span>
+              <div class="card-icon">
+                <span class="badge bg-label-danger rounded p-2">
+                  <i class="icon-base bx {{ trendIcon($persenRetur) }} icon-lg"></i>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
   <div class="row mt-4">
+    {{-- Order Belum Lunas --}}
     <div class="col-lg-3 col-sm-6">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="card-info">
-              <p class="text-heading mb-1">Session</p>
+              <p class="text-heading mb-1">Order Belum Lunas</p>
               <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">58,352</h4>
-                <span class="text-success">(+29%)</span>
+                <h4 class="card-title mb-0 me-2">{{ number_format($orderBelumLunas) }}</h4>
+                <span class="{{ trendClass($persenBelumLunas) }}">({{ $persenBelumLunas }}%)</span>
               </div>
-              <span>Last Week Analytics</span>
+              <span>Periode saat ini</span>
             </div>
             <div class="card-icon">
-              <span class="badge bg-label-primary rounded p-2">
-                <i class="icon-base bx bx-trending-up icon-lg"></i>
+              <span class="badge bg-label-warning rounded p-2">
+                <i class="icon-base bx {{ trendIcon($persenBelumLunas) }} icon-lg"></i>
               </span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    {{-- Order Lunas --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="card-info">
-              <p class="text-heading mb-1">Time On Site</p>
+              <p class="text-heading mb-1">Order Lunas</p>
               <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">28m 14s</h4>
-                <span class="text-success">(+18%)</span>
+                <h4 class="card-title mb-0 me-2">{{ number_format($orderLunas) }}</h4>
+                <span class="{{ trendClass($persenLunas) }}">({{ $persenLunas }}%)</span>
               </div>
-              <span>Last Day Analytics</span>
-            </div>
-            <div class="card-icon">
-              <span class="badge bg-label-info rounded p-2">
-                <i class="icon-base bx bx-time-five icon-lg"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="card-info">
-              <p class="text-heading mb-1">Bounce Rate</p>
-              <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">62%</h4>
-                <span class="text-danger">(-14%)</span>
-              </div>
-              <span>Last Week Analytics</span>
-            </div>
-            <div class="card-icon">
-              <span class="badge bg-label-danger rounded p-2">
-                <i class="icon-base bx bx-pie-chart-alt icon-lg"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="card-info">
-              <p class="text-heading mb-1">Users</p>
-              <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">18,472</h4>
-                <span class="text-success">(+42%)</span>
-              </div>
-              <span>Last Year Analytics</span>
+              <span>Periode saat ini</span>
             </div>
             <div class="card-icon">
               <span class="badge bg-label-success rounded p-2">
-                <i class="icon-base bx bx-user icon-lg"></i>
+                <i class="icon-base bx {{ trendIcon($persenLunas) }} icon-lg"></i>
               </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+    {{-- HPP (Harga Pokok Penjualan) --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div class="card-info">
+              <p class="text-heading mb-1">HPP</p>
+              <div class="d-flex align-items-center mb-1">
+                <h4 class="card-title mb-0 me-2">Rp{{ number_format($hpp, 0, ',', '.') }}</h4>
+                <span class="{{ trendClass($persenHpp) }}">({{ $persenHpp }}%)</span>
+              </div>
+              <span>Periode saat ini</span>
+            </div>
+            <div class="card-icon">
+              <span class="badge bg-label-secondary rounded p-2">
+                <i class="icon-base bx {{ trendIcon($persenHpp) }} icon-lg"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{-- Rugi --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div class="card-info">
+              <p class="text-heading mb-1">Rugi</p>
+              <div class="d-flex align-items-center mb-1">
+                <h4 class="card-title mb-0 me-2">Rp{{ number_format($rugi, 0, ',', '.') }}</h4>
+                <span class="{{ trendClass($persenRugi) }}">({{ $persenRugi }}%)</span>
+              </div>
+              <span>Periode saat ini</span>
+            </div>
+            <div class="card-icon">
+              <span class="badge bg-label-danger rounded p-2">
+                <i class="icon-base bx {{ trendIcon($persenRugi) }} icon-lg"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
   <div class="row mt-4">
     <!-- Line Charts -->
     <div class="col-12 mb-6">

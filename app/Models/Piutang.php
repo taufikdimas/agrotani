@@ -20,6 +20,17 @@ class Piutang extends Model
     // Relasi opsional ke model produk
     public function produk()
     {
-        return $this->belongsTo(Product::class, 'produk_id');
+        return $this->belongsTo(Produk::class, 'produk_id');
     }
+
+    public function cicilanPiutang()
+    {
+        return $this->hasMany(CicilanPiutang::class, 'piutang_id');
+    }
+
+    public function detailPiutang()
+    {
+        return $this->hasMany(DetailPiutang::class, 'piutang_id');
+    }
+
 }

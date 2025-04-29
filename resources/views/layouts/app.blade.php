@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title>@yield('title', 'Dashboard') | Argotani</title>
+  <title>@yield('title', 'Dashboard') | Agrotani</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{{ asset('sneat/assets/img/favicon/favicon.ico') }}">

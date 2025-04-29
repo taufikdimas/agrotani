@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- @dd($penjualan->toArray()) --}}
+{{-- @dd($marketing->toArray()) --}}
     <style>
         .select2-container .select2-selection--single {
             height: 38px !important;
@@ -157,10 +157,10 @@
                         
                         <!-- Marketing -->
                         <div class="mb-3">
-                            <label for="marketing_id">_id</label>
+                            <label for="marketing_id">Marketing</label>
                             <select name="marketing_id" class="form-select" required>
                             <option value="">-- Pilih Marketing --</option>
-                            @foreach($marketing as $marketing_id)
+                            @foreach($marketing as $marketing)
                                 <option value="{{ $marketing->marketing_id }}">{{ $marketing->nama_marketing }}</option>
                             @endforeach
                             </select>
