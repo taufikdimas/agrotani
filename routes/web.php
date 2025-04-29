@@ -10,6 +10,7 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenjualanDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
+use App\Http\Controllers\HutangPiutangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,15 +40,20 @@ Route::get('/produk/list', [ProdukController::class, 'list'])->name('produk.list
 Route::get('/customer/list', [CustomerController::class, 'list'])->name('customer.list');
 Route::post('/customer/store', [CustomerController::class, 'save'])->name('customer.store');
 
+
 // Resource routes (CRUD)
 Route::resources([
     // 'produk'          => ProdukController::class,
-    'customer'         => CustomerController::class,
+    // 'customer'         => CustomerController::class,
     'penjualan'        => PenjualanController::class,
     // 'inventory'        => InventoryController::class,
     'marketing'        => MarketingController::class,
     'marketing-report' => MarketingReportController::class,
 ]);
+
+Route::prefix('hutang')->group(function () {
+    Route::get('/hutang-customer', [HutangPiutangController::class, 'hutang_customer']);
+});
 
 Route::prefix('produk')->group(function () {
     Route::get('/', [ProdukController::class, 'index']);

@@ -5,6 +5,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Penjualan;
+use App\Models\Produk;
 
 class CustomerController extends Controller
 {
@@ -215,5 +216,7 @@ class CustomerController extends Controller
             'data'    => $customers,
         ]);
     }
+
+    
 
 }

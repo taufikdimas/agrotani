@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    protected $dates    = ['deleted_at'];
+    protected $dates = ['deleted_at'];  
     protected $table    = 'customer';
     protected $fillable = [
         'nama_customer',
@@ -14,7 +14,7 @@ class Customer extends Model
         'no_hp_customer',
         'hutang_customer',
         'is_deleted',
-        'deleted_at',
+        'deleted_at'
     ];
     protected $primaryKey = 'customer_id';
 
@@ -30,7 +30,7 @@ class Customer extends Model
         return $this->hasManyThrough(
             DetailPenjualan::class,
             Penjualan::class,
-            'customer_id',  // Foreign key pada Penjualan
+            'customer_id', // Foreign key pada Penjualan
             'penjualan_id', // Foreign key pada DetailPenjualan
             'customer_id',  // Local key pada Customer
             'penjualan_id'  // Local key pada Penjualan
