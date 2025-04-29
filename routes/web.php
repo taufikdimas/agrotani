@@ -3,14 +3,15 @@
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HutangPiutangController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\MarketingReportController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenjualanDetailController;
+use App\Http\Controllers\PiutangController;
+use App\Http\Controllers\PiutangDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
-use App\Http\Controllers\HutangPiutangController;
-use App\Http\Controllers\PiutangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,7 +40,6 @@ Route::get('/ajax/produk-list', [ProdukController::class, 'produk_list'])->name(
 Route::get('/produk/list', [ProdukController::class, 'list'])->name('produk.list');
 Route::get('/customer/list', [CustomerController::class, 'list'])->name('customer.list');
 Route::post('/customer/store', [CustomerController::class, 'save'])->name('customer.store');
-
 
 // Resource routes (CRUD)
 Route::resources([
@@ -96,23 +96,6 @@ Route::prefix('customer')->group(function () {
     Route::get('/import', [CustomerController::class, 'import']);
     Route::get('/export_excel', [CustomerController::class, 'export_excel']);
     Route::get('/export_pdf', [CustomerController::class, 'export_pdf']);
-});
-
-Route::prefix('penjualan')->group(function () {
-    Route::get('/', [PenjualanController::class, 'index']);
-    Route::get('/create', [PenjualanController::class, 'create']);
-    Route::put('/{id}', [PenjualanController::class, 'update']);
-    Route::get('/edit/{id}', [PenjualanController::class, 'edit'])->name('penjualan.edit');
-    Route::post('/edit/{penjualanId}/detail', [PenjualanDetailController::class, 'store']);
-    Route::post('edit/{penjualanId}/detail/update', [PenjualanDetailController::class, 'updateDetailPenjualan'])->name('penjualan.updateDetail');
-    Route::post('edit/{penjualanId}/detail/delete', [PenjualanDetailController::class, 'deleteDetailPenjualan'])->name('penjualan.deleteDetail');
-    Route::post('/{produkId}/update-stok', [PenjualanDetailController::class, 'updateStok'])->name('penjualan.updateStok');
-    Route::post('/{penjualan_id}/add-cicilan', [PenjualanController::class, 'addCicilan'])->name('cicilan.add');
-    Route::get('/{id}/delete', [PenjualanController::class, 'confirm']);
-    Route::delete('/{id}/delete', [PenjualanController::class, 'delete']);
-    Route::get('/import', [PenjualanController::class, 'import']);
-    Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
-    Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
 });
 
 Route::prefix('penjualan')->group(function () {
