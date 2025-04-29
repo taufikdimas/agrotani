@@ -18,11 +18,9 @@ class Customer extends Model
     ];
     protected $primaryKey = 'customer_id';
 
-    public function sales()
+    // Relasi ke Penjualan
+    public function penjualan()
     {
-<<<<<<< Updated upstream
-        return $this->hasMany(Penjualan::class);
-=======
         return $this->hasMany(Penjualan::class, 'customer_id', 'customer_id');
     }
 
@@ -37,6 +35,5 @@ class Customer extends Model
             'customer_id',  // Local key pada Customer
             'penjualan_id'  // Local key pada Penjualan
         );
->>>>>>> Stashed changes
     }
 }
