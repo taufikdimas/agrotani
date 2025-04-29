@@ -60,12 +60,12 @@
       </a>
       <ul class="menu-sub">
         <li class="menu-item {{ request()->is('marketing*') ? 'active' : '' }}">
-          <a href="{{ route('marketing.index') }}" class="menu-link">
+          <a href="{{ url('/marketing') }}" class="menu-link">
             <div>Data Marketing</div>
           </a>
         </li>
         <li class="menu-item {{ request()->is('marketing-report*') ? 'active' : '' }}">
-          <a href="{{ route('marketing-report.index') }}" class="menu-link">
+          <a href="{{ url('/marketing-report') }}" class="menu-link">
             <div>Laporan Marketing</div>
           </a>
         </li>

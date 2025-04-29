@@ -42,6 +42,12 @@
         hr {
             border-color: #e0e0e0;
         }
+        .truncate-text {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
     
     <div class="col-12 mb-4">
@@ -52,12 +58,12 @@
                         <div class="col-sm-6 col-lg-3">
                             <div class="d-flex justify-content-between align-items-center card-widget-1 border-end pb-4 pb-sm-0">
                                 <div>
-                                    <h4 class="mb-0">{{ $totalProduk }}</h4>
-                                    <p class="mb-0">Total Produk</p>
+                                    <h4 class="mb-0">{{ $totalMarketing }}</h4>
+                                    <p class="mb-0">Total Marketing</p>
                                 </div>
                                 <div class="avatar me-sm-4">
                                     <span class="avatar-initial rounded bg-label-secondary text-heading">
-                                        <i class="bx bx-package bx-md"></i>
+                                        <i class="bx bx-user bx-md"></i>
                                     </span>
                                 </div>
                             </div>
@@ -66,12 +72,12 @@
                         <div class="col-sm-6 col-lg-3">
                             <div class="d-flex justify-content-between align-items-center card-widget-2 border-end pb-4 pb-sm-0">
                                 <div>
-                                    <h4 class="mb-0">{{ $stokHabis }}</h4>
-                                    <p class="mb-0">Stok Habis</p>
+                                    <h4 class="mb-0">{{ $totalActive }}</h4>
+                                    <p class="mb-0">Aktif</p>
                                 </div>
                                 <div class="avatar me-lg-4">
                                     <span class="avatar-initial rounded bg-label-secondary text-heading">
-                                        <i class="bx bx-error bx-md"></i>
+                                        <i class="bx bx-check-circle bx-md"></i>
                                     </span>
                                 </div>
                             </div>
@@ -80,12 +86,12 @@
                         <div class="col-sm-6 col-lg-3">
                             <div class="d-flex justify-content-between align-items-center card-widget-3 border-end pb-4 pb-sm-0">
                                 <div>
-                                    <h4 class="mb-0">{{ $stokRendah }}</h4>
-                                    <p class="mb-0">Stok Rendah</p>
+                                    <h4 class="mb-0">{{ $totalInactive }}</h4>
+                                    <p class="mb-0">Non-Aktif</p>
                                 </div>
                                 <div class="avatar me-sm-4">
                                     <span class="avatar-initial rounded bg-label-secondary text-heading">
-                                        <i class="bx bx-alarm bx-md"></i>
+                                        <i class="bx bx-x-circle bx-md"></i>
                                     </span>
                                 </div>
                             </div>
@@ -93,12 +99,12 @@
                         <div class="col-sm-6 col-lg-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h4 class="mb-0">Rp{{ number_format($nilaiInventory, 0, ',', '.') }}</h4>
-                                    <p class="mb-0">Nilai Inventori</p>
+                                    <h4 class="mb-0">{{ $totalMarketing }}</h4>
+                                    <p class="mb-0">Total Tim</p>
                                 </div>
                                 <div class="avatar">
                                     <span class="avatar-initial rounded bg-label-secondary text-heading">
-                                        <i class="bx bx-dollar bx-md"></i>
+                                        <i class="bx bx-group bx-md"></i>
                                     </span>
                                 </div>
                             </div>
@@ -114,15 +120,14 @@
         <h5 class="card-title">Filter</h5>
         <div class="row align-items-center g-3 mt-3">
             <div class="col-md-2">
-                <select class="form-select" id="filter_stok" aria-label="Filter by Stock Status">
-                    <option selected>Status Stok</option>
-                    <option value="in_stock">Stok Tersedia</option>
-                    <option value="low_stock">Stok Rendah</option>
-                    <option value="out_of_stock">Stok Habis</option>
+                <select class="form-select" id="filter_status" aria-label="Filter by Status">
+                    <option selected value="">Semua Status</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="nonaktif">Non-Aktif</option>
                 </select>
             </div>
-            <div class="col-md-7">
-                <input type="text" id="search_produk" class="form-control" placeholder="Cari Nama Produk" aria-label="Search Product">
+            <div class="col-md-6">
+                <input type="text" id="search_marketing" class="form-control" placeholder="Cari Nama Marketing" aria-label="Search Marketing">
             </div>
             <div class="col-md-1">
                 <select class="form-select" id="per_page" aria-label="Select number of items">
@@ -132,9 +137,9 @@
                     <option value="100">100</option>
                 </select>
             </div>
-            <div class="col-md-2 text-end">
-                <button type="button" class="btn btn-primary w-100" id="createProductBtn" onclick="modalAction('{{ url('produk/create') }}')">
-                    <i class="bx bx-plus me-1"></i> Tambah Produk
+            <div class="col-md-3 "> 
+                <button type="button" class="btn btn-primary w-80" id="createMarketingBtn" onclick="modalAction('{{ url('marketing/create') }}')">
+                    <i class="bx bx-plus me-2"></i> Tambah Marketing
                 </button>
             </div>
         </div>
@@ -143,59 +148,47 @@
     <div class="table-responsive text-nowrap mt-3">
         <table class="table">
             <thead>
-            {{-- <thead class="table-light">  --}}
+                <tr>
+                    <th>Nama Marketing</th>
+                    <th>Kontak</th>
+                    <th>Deskripsi</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0" id="table-marketing">
+                @foreach ($marketing as $person)
                     <tr>
-                        <th>Kode Produk</th>
-                        <th>Produk</th>
-                        <th>HPP</th>
-                        <th>Harga</th>
-                        <th>Stok</th>
-                        <th>Status Stok</th>
-                        <th>Minimal Stok</th>
-                        <th>Deskripsi</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0" id="table-produk">
-                    @foreach ($produk as $product)
-                        <tr>
-                            <td>{{ $product->kode_produk }}</td>
-                            <td>{{ $product->nama_produk }}</td>
-                            <td>Rp{{ number_format($product->hpp, 0, ',', '.') }}</td>
-                            <td>Rp{{ number_format($product->harga, 0, ',', '.') }}</td>
-                            <td>{{ $product->stok }}</td>
-                            <td>
-                                @if($product->stok == 0)
-                                    <span class="badge bg-label-danger">Habis</span>
-                                @elseif($product->stok <= $product->min_stok)
-                                    <span class="badge bg-label-warning">Rendah</span>
-                                @else
-                                    <span class="badge bg-label-success">Tersedia</span>
-                                @endif
-                            </td>
-                            <td>{{ $product->min_stok }}</td>
-                            <td>{{ Str::limit($product->deskripsi, 50, '...') }}</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="icon-base bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('produk/' . $product->produk_id . '/edit') }}')">
-                                            <i class="icon-base bx bx-edit-alt me-1"></i> Edit
-                                        </a>
-                                        <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('produk/' . $product->produk_id . '/delete') }}')">
-                                            <i class="icon-base bx bx-trash me-1"></i> Delete
-                                        </a>
-                                    </div>
+                        <td>{{ $person->nama_marketing }}</td>
+                        <td>{{ $person->kontak_marketing }}</td>
+                        <td class="truncate-text" title="{{ $person->deskripsi }}">
+                            {{ $person->deskripsi ?: '-' }}
+                        </td>
+                        <td>
+                            <span class="badge bg-label-{{ $person->status == 'aktif' ? 'success' : 'danger' }}">
+                                {{ ucfirst($person->status) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('marketing/' . $person->marketing_id . '/edit') }}')">
+                                        <i class="icon-base bx bx-edit-alt me-1"></i> Edit
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('marketing/' . $person->marketing_id . '/delete') }}')">
+                                        <i class="icon-base bx bx-trash me-1"></i> Delete
+                                    </a>
                                 </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-   </div>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
@@ -213,52 +206,44 @@
     }
 
     $(document).ready(function() {
-        function loadProduk() {
-            let filter_stok = $('#filter_stok').val();
-            let search_produk = $('#search_produk').val();
+        function loadMarketing() {
+            let filter_status = $('#filter_status').val();
+            let search_marketing = $('#search_marketing').val();
             let per_page = $('#per_page').val();
 
             $.ajax({
-                url: "{{ url('/produk/list') }}",
-                method: "GET",
+                url: "{{ route('marketing.list') }}",
                 data: {
-                    filter_stok: filter_stok,
-                    search_produk: search_produk,
+                    filter_status: filter_status,
+                    search_marketing: search_marketing,
                     per_page: per_page
                 },
                 success: function(response) {
                     let html = '';
 
-                    response.produk.forEach(function(item) {
-                        let statusStok = '';
-                        if (item.stok == 0) {
-                            statusStok = '<span class="badge bg-label-danger">Habis</span>';
-                        } else if (item.stok <= item.min_stok) {
-                            statusStok = '<span class="badge bg-label-warning">Rendah</span>';
-                        } else {
-                            statusStok = '<span class="badge bg-label-success">Tersedia</span>';
-                        }
-
+                    response.marketing.forEach(function(item) {
                         html += `
                             <tr>
-                                <td>${item.kode_produk}</td>
-                                <td>${item.nama_produk}</td>
-                                <td>Rp${Number(item.hpp).toLocaleString('id-ID')}</td>
-                                <td>Rp${Number(item.harga).toLocaleString('id-ID')}</td>
-                                <td>${item.stok}</td>
-                                <td>${statusStok}</td>
-                                <td>${item.min_stok}</td>
-                                <td>${item.deskripsi ? item.deskripsi.substring(0, 50) + '...' : ''}</td>
+                                <td>${item.nama_marketing}</td>
+                                <td>${item.kontak_marketing}</td>
+                                <td class="truncate-text" title="${item.deskripsi || ''}">
+                                    ${item.deskripsi ? item.deskripsi.substring(0, 30) + (item.deskripsi.length > 30 ? '...' : '') : '-'}
+                                </td>
+                                <td>
+                                    <span class="badge bg-label-${item.status == 'aktif' ? 'success' : 'danger'}">
+                                        ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('produk') }}/${item.produk_id}/edit')">
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('marketing') }}/${item.marketing_id}/edit')">
                                                 <i class="bx bx-edit-alt me-1"></i> Edit
                                             </a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('produk') }}/${item.produk_id}/delete')">
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('{{ url('marketing') }}/${item.marketing_id}/delete')">
                                                 <i class="bx bx-trash me-1"></i> Hapus
                                             </a>
                                         </div>
@@ -268,24 +253,24 @@
                         `;
                     });
 
-                    $('#table-produk').html(html);
-                    $('#pagination-produk').html(response.pagination); 
+                    $('#table-marketing').html(html);
+                    $('#pagination-marketing').html(response.pagination); 
                 },
                 error: function(xhr) {
                     console.error(xhr.responseText);
-                    alert('Gagal memuat data produk.');
+                    alert('Gagal memuat data marketing.');
                 }
             });
         }
 
-        loadProduk();
+        loadMarketing();
 
-        $('#filter_stok, #per_page').on('change', function() {
-            loadProduk();
+        $('#filter_status, #per_page').on('change', function() {
+            loadMarketing();
         });
 
-        $('#search_produk').on('keyup', function() {
-            loadProduk();
+        $('#search_marketing').on('keyup', function() {
+            loadMarketing();
         });
     });
 
@@ -343,4 +328,4 @@
         });
     });
 </script>
-@endpush
+@endpush    

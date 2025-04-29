@@ -120,13 +120,31 @@ class ProdukController extends Controller
             'data'    => $produk,
         ]);
     }
-    public function list()
+    public function list(Request $request)
     {
-        $produk = Produk::select('produk_id', 'nama_produk', 'harga')->get();
+        $data = Produk::select(['produk_id', 'kode_produk', 'nama_produk', 'deskripsi', 'harga', 'stok', 'min_stok', 'created_at', 'updated_at']);
+
+        if ($request->search_produk) {
+            $data->where('nama_produk', 'like', '%' . $request->search_produk . '%');
+        }
+
+        if ($request->filter_stok) {
+            if ($request->filter_stok == 'in_stock') {
+                $data->whereColumn('stok', '>', 'min_stok');
+            } elseif ($request->filter_stok == 'low_stock') {
+                $data->whereColumn('stok', '<=', 'min_stok')->where('stok', '>', 0);
+            } elseif ($request->filter_stok == 'out_of_stock') {
+                $data->where('stok', '<=', 0);
+            }
+        }
+        $perPage = $request->input('per_page', 10);
+        $produk  = $data->paginate($perPage);
+
         return response()->json([
-            'success' => true,
-            'data'    => $produk,
+            'produk'     => $produk->items(),
+            'pagination' => $produk->links()->toHtml(),
         ]);
+
     }
 
 }

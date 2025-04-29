@@ -242,7 +242,7 @@
 
                         });
                     } else {
-                        html = `<tr><td colspan="6" class="text-center">Tidak ada data ditemukan</td></tr>`;
+                        html = <tr><td colspan="6" class="text-center">Tidak ada data ditemukan</td></tr>;
                     }
 
                     $('#list_customer').html(html);

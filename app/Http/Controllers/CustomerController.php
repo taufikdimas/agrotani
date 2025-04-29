@@ -2,10 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Penjualan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Penjualan;
-use App\Models\Produk;
 
 class CustomerController extends Controller
 {
@@ -20,8 +19,7 @@ class CustomerController extends Controller
             'hutang_customer',
         ])
             ->where('is_deleted', 0)
-            ->whereNull('deleted_at')
-            ->get();
+            ->whereNull('deleted_at');
 
         $totalCustomer  = Customer::where('is_deleted', 0)->count();
         $totalHutang    = Customer::where('is_deleted', 0)->sum('hutang_customer');
@@ -29,7 +27,7 @@ class CustomerController extends Controller
         $customerLunas  = Customer::where('is_deleted', 0)->where('hutang_customer', 0)->count();
 
         return view('customer.index', [
-            'customer'       => $data,
+            'customer'       => $data->get(),
             'totalCustomers' => $totalCustomer,
             'totalHutang'    => $totalHutang,
             'customerHutang' => $customerHutang,
@@ -39,9 +37,9 @@ class CustomerController extends Controller
 
     public function history_transaksi($id)
     {
-        $customer = Penjualan::where('customer_id', $id)->get();
-        $totalTransaksi = Penjualan::where('customer_id', $id)->count();
-        $totalPembelian = Penjualan::where('customer_id', $id)->sum('total_harga');
+        $customer        = Penjualan::where('customer_id', $id)->get();
+        $totalTransaksi  = Penjualan::where('customer_id', $id)->count();
+        $totalPembelian  = Penjualan::where('customer_id', $id)->sum('total_harga');
         $totalBelumLunas = Penjualan::where('customer_id', $id)
             ->where('status_pembayaran', 'Belum Lunas')
             ->sum('total_harga');
@@ -50,14 +48,13 @@ class CustomerController extends Controller
             ->where('status_pembayaran', 'Lunas')
             ->sum('total_harga');
 
-
-        return view('customer.riwayat_order', 
+        return view('customer.riwayat_order',
             [
                 'historyTransaksi' => $customer,
-                'totalTransaksi' => $totalTransaksi,
-                'totalPembelian' => $totalPembelian,
-                'totalBelumLunas' => $totalBelumLunas,
-                'totalLunas' => $totalLunas
+                'totalTransaksi'   => $totalTransaksi,
+                'totalPembelian'   => $totalPembelian,
+                'totalBelumLunas'  => $totalBelumLunas,
+                'totalLunas'       => $totalLunas,
             ]
         );
     }
@@ -186,7 +183,7 @@ class CustomerController extends Controller
 
     public function list(Request $request)
     {
-        $query = Customer::select([
+        $data = Customer::select([
             'customer_id',
             'nama_customer',
             'perusahaan_customer',
@@ -196,27 +193,25 @@ class CustomerController extends Controller
         ])->where('is_deleted', 0);
 
         // Filter Status Hutang
-        if ($request->status_hutang == 'Hutang') {
-            $query->where('hutang_customer', '>', 0);
-        } elseif ($request->status_hutang == 'Lunas') {
-            $query->where('hutang_customer', 0);
+        if ($request->has('status_hutang')) {
+            if ($request->status_hutang == 'Hutang') {
+                $data->where('hutang_customer', '>', 0);
+            } elseif ($request->status_hutang == 'Lunas') {
+                $data->where('hutang_customer', '=', 0);
+            }
         }
 
-        // Search Nama Customer
-        if (! empty($request->search_customer)) {
-            $query->where('nama_customer', 'like', '%' . $request->search_customer . '%');
+        if ($request->has('search_customer')) {
+            $data->where('nama_customer', 'like', '%' . $request->search_customer . '%');
         }
 
-        // Paginate
-        $perPage   = $request->per_page ?? 10;
-        $customers = $query->paginate($perPage);
+        $perPage   = $request->input('per_page', 10);
+        $customers = $data->paginate($perPage);
 
         return response()->json([
-            'success' => true,
-            'data'    => $customers,
+            'customer'   => $customers->items(),
+            'pagination' => $customers->withQueryString()->links()->render(),
         ]);
     }
-
-    
 
 }
