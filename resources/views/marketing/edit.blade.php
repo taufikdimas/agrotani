@@ -1,4 +1,4 @@
-<form action="{{ url('/marketing/' . $marketing->marketing_id) }}" method="POST" id="form-edit-marketing">
+<form action="{{ url('/marketing/' . $marketing->marketing_id) }}" method="POST" id="form-edit">
     @csrf
     @method('PUT')
     <div id="modal-edit-marketing" class="modal-dialog modal-lg" role="document">

@@ -181,6 +181,7 @@
                     @endforeach
                 </tbody>
             </table>
+            <div id="pagination_links" class="mt-3"></div>
         </div>
     </div>
 
@@ -191,6 +192,9 @@
 
 @push('scripts')
 <script>
+    const baseUrl = "{{ url('') }}";
+</script>
+<script>
     function modalAction(url = '') {
         $('#myModal').load(url, function() {
             $('#myModal').modal('show');
@@ -198,19 +202,24 @@
     }
 
     $(document).ready(function() {
-    function loadCustomers() {
-        $.ajax({
-            url: "{{ url('/customer/list') }}",
-            method: "GET",
-            data: {
-                status_hutang: $('#filter_status_hutang').val(),
-                search_customer: $('#search_customer').val(),
-                per_page: $('#select_per_page').val()
-            },
-            success: function(res) {
+        function loadCustomers() {
+            let filter_status_hutang = $('#filter_status_hutang').val();
+            let search_customer = $('#search_customer').val();
+            let per_page = $('#select_per_page').val();
+
+            $.ajax({
+                url: "{{ url('/customer/list') }}",
+                method: "GET",
+                data: {
+                    status_hutang: filter_status_hutang,
+                    search_customer: search_customer,
+                    per_page: per_page
+                },
+           success: function(res) {
                 let html = '';
-                if (res.success && res.data.data.length > 0) {
-                    $.each(res.data.data, function(index, customer) {
+
+                if (res.customer && res.customer.length > 0) {
+                    res.customer.forEach(function(customer) {
                         html += `
                             <tr>
                                 <td>
@@ -221,7 +230,7 @@
                                 <td>${customer.perusahaan_customer ?? '-'}</td>
                                 <td>${customer.alamat_customer ?? '-'}</td>
                                 <td>${customer.no_hp_customer ?? '-'}</td>
-                                <td>Rp${parseFloat(customer.hutang_customer).toLocaleString('id-ID', {minimumFractionDigits: 2})}</td>
+                                <td>Rp${parseFloat(customer.hutang_customer).toLocaleString('id-ID', { minimumFractionDigits: 2 })}</td>
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -239,32 +248,31 @@
                                 </td>
                             </tr>
                         `;
-
                     });
                 } else {
                     html = `<tr><td colspan="6" class="text-center">Tidak ada data ditemukan</td></tr>`;
                 }
 
                 $('#list_customer').html(html);
+                $('#pagination_links').html(res.pagination);
             },
-            error: function(err) {
-                console.log(err);
-            }
+                error: function(err) {
+                    console.error(err.responseText);
+                    alert('Gagal memuat data customer.');
+                }
+            });
+        }
+
+        loadCustomers();
+
+        $('#filter_status_hutang, #select_per_page').on('change', function() {
+            loadCustomers();
         });
-    }
 
-    // Panggil pertama kali
-    loadCustomers();
-
-    // Event change filter dan search
-    $('#filter_status_hutang, #select_per_page').on('change', function() {
-        loadCustomers();
+        $('#search_customer').on('keyup', function() {
+            loadCustomers();
+        });
     });
-
-    $('#search_customer').on('keyup', function() {
-        loadCustomers();
-    });
-});
 
     $(document).on('submit', 'form', function(e) {
         e.preventDefault();

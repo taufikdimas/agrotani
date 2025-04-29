@@ -10,7 +10,6 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenjualanDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
-use App\Http\Controllers\HutangPiutangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,9 +36,7 @@ Route::get('/ajax/customer-detail/{id}', [AjaxController::class, 'get_customer_d
 
 Route::get('/ajax/produk-list', [ProdukController::class, 'produk_list'])->name('ajax.produk.list');
 Route::get('/produk/list', [ProdukController::class, 'list'])->name('produk.list');
-Route::get('/customer/list', [CustomerController::class, 'list'])->name('customer.list');
 Route::post('/customer/store', [CustomerController::class, 'save'])->name('customer.store');
-
 
 // Resource routes (CRUD)
 Route::resources([
@@ -47,7 +44,7 @@ Route::resources([
     // 'customer'         => CustomerController::class,
     'penjualan'        => PenjualanController::class,
     // 'inventory'        => InventoryController::class,
-    'marketing'        => MarketingController::class,
+    // 'marketing'        => MarketingController::class,
     'marketing-report' => MarketingReportController::class,
 ]);
 
@@ -116,22 +113,14 @@ Route::prefix('penjualan')->group(function () {
 });
 
 Route::prefix('marketing')->group(function () {
-    // CRUD standar
+    Route::get('/', [MarketingController::class, 'index']);
     Route::get('/marketing/list', [MarketingController::class, 'list'])->name('marketing.list');
-    Route::get('/import', [MarketingController::class, 'import'])->name('marketing.import');
-    Route::get('/export_excel', [MarketingController::class, 'export_excel'])->name('marketing.export_excel');
-    Route::get('/export_pdf', [MarketingController::class, 'export_pdf'])->name('marketing.export_pdf');
-    Route::get('/{id}/delete', [MarketingController::class, 'confirm'])->name('marketing.confirm');
-    Route::get('/{id}/delete', [ProdukController::class, 'confirm']);
-    Route::delete('/{id}/delete', [ProdukController::class, 'delete']);
-
-    Route::resource('/', MarketingController::class)->parameters(['' => 'id'])->names([
-        'index'   => 'marketing.index',
-        'create'  => 'marketing.create',
-        'store'   => 'marketing.store',
-        'show'    => 'marketing.show', // opsional, kalau tidak dipakai, abaikan saja
-        'edit'    => 'marketing.edit',
-        'update'  => 'marketing.update',
-        'destroy' => 'marketing.delete',
-    ]);
+    Route::get('/create', [MarketingController::class, 'create']);
+    Route::post('/', [MarketingController::class, 'store']);
+    Route::get('/{id}/edit', [MarketingController::class, 'edit']);
+    Route::put('/{id}', [MarketingController::class, 'update']);
+    Route::get('/{id}/delete', [MarketingController::class, 'confirm']);
+    Route::delete('/{id}/delete', [MarketingController::class, 'delete']);
+    Route::get('/export_excel', [MarketingController::class, 'export_excel']);
+    Route::get('/export_pdf', [MarketingController::class, 'export_pdf']);
 });
