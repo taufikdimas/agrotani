@@ -142,8 +142,30 @@
                             @enderror
                         </div>
 
+                        <!-- Status Order -->
+                        <div class="mb-3">
+                            <label for="status_order" class="form-label">Status Order</label>
+                            <select class="form-select" id="status_order" name="status_order" required>
+                                <option value="">-- Pilih Status Order --</option>
+                                <option value="Selesai" @if(strcasecmp(trim($penjualan->status_order), 'Selesai') === 0) selected @endif>Selesai</option>
+                                <option value="Retur" @if(strcasecmp(trim($penjualan->status_order), 'Retur') === 0) selected @endif>Retur</option>
+                            </select>
+                            @error('status_order')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
                         
-
+                        <!-- Marketing -->
+                        <div class="mb-3">
+                            <label for="marketing_id">_id</label>
+                            <select name="marketing_id" class="form-select" required>
+                            <option value="">-- Pilih Marketing --</option>
+                            @foreach($marketing as $marketing_id)
+                                <option value="{{ $marketing->marketing_id }}">{{ $marketing->nama_marketing }}</option>
+                            @endforeach
+                            </select>
+                            <small id="error-marketing" class="error-text form-text text-danger"></small>
+                        </div>
 
                         <!-- Tombol Submit -->
                         <div class="d-flex justify-content-end gap-2">
@@ -223,46 +245,6 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
-                $('#cicilanForm').submit(function(e) {
-                    e.preventDefault(); // Mencegah form untuk submit secara normal
-                    
-                    var formData = $(this).serialize(); // Mengambil semua data form
-
-                    // Mengirim data menggunakan AJAX
-                    $.ajax({
-                        url: $(this).attr('action'),  // URL form action
-                        method: 'POST',               // Menggunakan POST method
-                        data: formData,               // Data yang akan dikirim
-                        success: function(response) {
-                            // Menangani response dari server
-                            if(response.success) {
-                                // Menutup modal
-                                $('#cicilanModal').modal('hide');
-                                // Menampilkan notifikasi atau pesan sukses
-                                alert('Cicilan berhasil ditambahkan');
-                                
-                                // Misalnya update tabel cicilan
-                                $('#cicilanTable tbody').append(`
-                                    <tr>
-                                        <td>${response.cicilan_id}</td>
-                                        <td>${response.jumlah_cicilan}</td>
-                                        <td>${response.tanggal_cicilan}</td>
-                                        <td>${response.metode_pembayaran}</td>
-                                        <td>${response.status_pembayaran}</td>
-                                    </tr>
-                                `);
-                            } else {
-                                alert('Terjadi kesalahan: ' + response.message);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            // Menangani error jika request gagal
-                            console.log('Error:', error);
-                            alert('Terjadi kesalahan, coba lagi.');
-                        }
-                    });
-                });
-                // Initialize Select2 for customer select
                 $('#customerSelect').select2({
                     minimumInputLength: 1,
                     placeholder: 'Cari Customer...',
@@ -308,12 +290,10 @@
                     });
                 });
 
-                // Set initial customer data if exists
                 @if($penjualan->customer_id)
                     $("#customerData").show();
                 @endif
 
-                // Event untuk menambahkan produk ke tabel
                 $('#addProduct').click(function() {
                     var productId = $('#produkSelect').val();
                     var quantity = 1;
@@ -337,7 +317,6 @@
                             return;
                         }
 
-                        // Menambah produk ke tabel
                         var rowHtml = `<tr data-id="${productId}">
                             <td>${productName}</td>
                             <td class="hpp">${formatRupiah(hpp)}</td>
@@ -350,7 +329,6 @@
                         $('#produkBody').append(rowHtml);
                         updateTotalPrice();
 
-                        // Reset input form
                         $('#produkSelect').val('');
                     } else {
                         alert("Pilih produk terlebih dahulu.");
