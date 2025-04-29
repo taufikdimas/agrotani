@@ -219,7 +219,8 @@
             let per_page = $('#per_page').val();
 
             $.ajax({
-                url: "{{ route('produk.list') }}",
+                url: "{{ url('/produk/list') }}",
+                method: "GET",
                 data: {
                     filter_stok: filter_stok,
                     search_produk: search_produk,
