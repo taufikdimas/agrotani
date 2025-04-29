@@ -3,6 +3,7 @@
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HutangPiutangController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\MarketingReportController;
 use App\Http\Controllers\PenjualanController;
@@ -106,4 +107,25 @@ Route::prefix('penjualan')->group(function () {
     Route::get('/import', [PenjualanController::class, 'import']);
     Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
     Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
+});
+
+Route::prefix('marketing')->group(function () {
+    // CRUD standar
+    Route::get('/marketing/list', [MarketingController::class, 'list'])->name('marketing.list');
+    Route::get('/import', [MarketingController::class, 'import'])->name('marketing.import');
+    Route::get('/export_excel', [MarketingController::class, 'export_excel'])->name('marketing.export_excel');
+    Route::get('/export_pdf', [MarketingController::class, 'export_pdf'])->name('marketing.export_pdf');
+    Route::get('/{id}/delete', [MarketingController::class, 'confirm'])->name('marketing.confirm');
+    Route::get('/{id}/delete', [ProdukController::class, 'confirm']);
+    Route::delete('/{id}/delete', [ProdukController::class, 'delete']);
+
+    Route::resource('/', MarketingController::class)->parameters(['' => 'id'])->names([
+        'index'   => 'marketing.index',
+        'create'  => 'marketing.create',
+        'store'   => 'marketing.store',
+        'show'    => 'marketing.show', // opsional, kalau tidak dipakai, abaikan saja
+        'edit'    => 'marketing.edit',
+        'update'  => 'marketing.update',
+        'destroy' => 'marketing.delete',
+    ]);
 });

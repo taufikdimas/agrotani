@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('marketing', function (Blueprint $table) {
             $table->id('marketing_id');
-            $table->string('nama');
-            $table->string('phone')->nullable();
-            $table->string('email')->nullable();
+            $table->string('nama_marketing');
+            $table->text('deskripsi')->nullable();
+            $table->string('kontak_marketing')->nullable();
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });
     }
