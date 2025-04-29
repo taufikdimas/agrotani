@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Cicilan;
 use App\Models\Produk;
 use App\Models\Stok;
+use App\Models\Marketing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -71,9 +72,7 @@ class PenjualanController extends Controller
             'tanggal' => now(),
         ]);
 
-        // Jika kode_transaksi kosong, buat kode transaksi baru
         if (empty($penjualan->kode_transaksi)) {
-            // Generate kode transaksi dengan format TRXXXXXX
             $penjualan->kode_transaksi = 'TRX' . strtoupper(substr(md5(time()), 0, 6)); 
             $penjualan->save(); // Simpan kode transaksi ke database
         }
@@ -210,6 +209,7 @@ class PenjualanController extends Controller
 
 
         $customers = Customer::all();
+        $marketing = Marketing::all();
         $produk = Produk::all();
 
         return view('penjualan.edit', [
@@ -217,6 +217,7 @@ class PenjualanController extends Controller
             'penjualanDetail' => $penjualanDetail,
             'customers' => $customers,
             'produk'    => $produk,
+            'marketing' => $marketing
         ]);
     }
 

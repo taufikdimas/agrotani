@@ -14,7 +14,9 @@ class Penjualan extends Model
         'status_pembayaran',
         'total_harga',
         'dibayar',
-        'laba_bersih'
+        'laba_bersih',
+        'status_order',
+        'marketing_id',
     ];
 
     protected $primaryKey = 'penjualan_id';
