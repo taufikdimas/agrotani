@@ -1,15 +1,15 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Stok;
+use Illuminate\Database\Eloquent\Model;
 
 class Produk extends Model
 {
     protected $primaryKey = 'produk_id';
-    protected $table    = 'produk';
-    protected $fillable = [
-        'kode_produk', 'nama_produk', 'deskripsi', 'harga', 'stok', 'min_stok', 'hpp', 'gambar', 'stok_in', 'stok_out'
+    protected $table      = 'produk';
+    protected $fillable   = [
+        'kode_produk', 'nama_produk', 'deskripsi', 'harga', 'stok', 'min_stok', 'hpp', 'gambar', 'stok_in', 'stok_out',
     ];
 
     public function detailPenjualan()
