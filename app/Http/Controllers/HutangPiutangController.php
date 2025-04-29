@@ -13,13 +13,12 @@ class HutangPiutangController extends Controller
     {
         $customers = Customer::with([
             'penjualan' => function($query) {
-                // Filter penjualan dengan hutang (status belum lunas)
                 $query->where('status_pembayaran', 'Belum Lunas');
             },
-            'penjualan.detailPenjualan.produk' // Relasi ke produk melalui detail penjualan
+            'penjualan.detailPenjualan.produk' 
         ])
-        ->where('hutang_customer', '>', 0) // Customer yang memiliki hutang
-        ->where('is_deleted', 0) // Pastikan customer aktif
+        ->where('hutang_customer', '>', 0)
+        ->where('is_deleted', 0)
         ->orderBy('created_at', 'desc')
         ->get();
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\PenjualanDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\HutangPiutangController;
+use App\Http\Controllers\PiutangController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -112,4 +113,38 @@ Route::prefix('penjualan')->group(function () {
     Route::get('/import', [PenjualanController::class, 'import']);
     Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
     Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
+});
+
+Route::prefix('penjualan')->group(function () {
+    Route::get('/', [PenjualanController::class, 'index']);
+    Route::get('/create', [PenjualanController::class, 'create']);
+    Route::put('/{id}', [PenjualanController::class, 'update']);
+    Route::get('/edit/{id}', [PenjualanController::class, 'edit'])->name('penjualan.edit');
+    Route::post('/edit/{penjualanId}/detail', [PenjualanDetailController::class, 'store']);
+    Route::post('edit/{penjualanId}/detail/update', [PenjualanDetailController::class, 'updateDetailPenjualan'])->name('penjualan.updateDetail');
+    Route::post('edit/{penjualanId}/detail/delete', [PenjualanDetailController::class, 'deleteDetailPenjualan'])->name('penjualan.deleteDetail');
+    Route::post('/{produkId}/update-stok', [PenjualanDetailController::class, 'updateStok'])->name('penjualan.updateStok');
+    Route::post('/{penjualan_id}/add-cicilan', [PenjualanController::class, 'addCicilan'])->name('cicilan.add');
+    Route::get('/{id}/delete', [PenjualanController::class, 'confirm']);
+    Route::delete('/{id}/delete', [PenjualanController::class, 'delete']);
+    Route::get('/import', [PenjualanController::class, 'import']);
+    Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
+    Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
+});
+
+Route::prefix('piutang')->group(function () {
+    Route::get('/', [PiutangController::class, 'index']);
+    Route::get('/create', [PiutangController::class, 'create']);
+    Route::put('/{id}', [PiutangController::class, 'update']);
+    Route::get('/edit/{id}', [PiutangController::class, 'edit'])->name('piutang.edit');
+    Route::post('/edit/{piutangId}/detail', [PiutangDetailController::class, 'store']);
+    Route::post('edit/{piutangId}/detail/update', [PiutangDetailController::class, 'updateDetailPiutang'])->name('piutang.updateDetail');
+    Route::post('edit/{piutangId}/detail/delete', [PiutangDetailController::class, 'deleteDetailPiutang'])->name('piutang.deleteDetail');
+    Route::post('/{produkId}/update-stok', [PiutangDetailController::class, 'updateStok'])->name('piutang.updateStok');
+    Route::post('/{piutang_id}/add-cicilan', [PiutangController::class, 'addCicilan'])->name('cicilan.add');
+    Route::get('/{id}/delete', [PiutangController::class, 'confirm']);
+    Route::delete('/{id}/delete', [PiutangController::class, 'delete']);
+    Route::get('/import', [PiutangController::class, 'import']);
+    Route::get('/export_excel', [PiutangController::class, 'export_excel']);
+    Route::get('/export_pdf', [PiutangController::class, 'export_pdf']);
 });

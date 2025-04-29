@@ -3,13 +3,10 @@
     @method('PUT')
     <div id="modal-edit-produk" class="modal-dialog modal-lg" role="document">
         <input type="hidden" name="produk_id" id="edit_produk_id">
-        <div class="modal-content">
-            <button type="button" class="close position-absolute" style="right: 15px; top: 10px; z-index: 10;" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            
+        <div class="modal-content">            
             <div class="modal-header">
                 <h5 class="modal-title">Edit Produk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
             <div class="modal-body">

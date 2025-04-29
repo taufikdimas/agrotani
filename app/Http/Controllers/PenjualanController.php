@@ -34,7 +34,8 @@ class PenjualanController extends Controller
                         'produk.gambar'
                     );
             },
-            'customer'
+            'customer',
+            'marketing'
         ])
         ->whereNotNull('customer_id')
         ->orderBy('created_at', 'desc')
@@ -62,7 +63,6 @@ class PenjualanController extends Controller
 
     public function create()
     {
-        // Membuat entri baru penjualan
         $penjualan = Penjualan::create([
             'customer_id' => null,
             'produk_id' => null,
@@ -74,10 +74,9 @@ class PenjualanController extends Controller
 
         if (empty($penjualan->kode_transaksi)) {
             $penjualan->kode_transaksi = 'TRX' . strtoupper(substr(md5(time()), 0, 6)); 
-            $penjualan->save(); // Simpan kode transaksi ke database
+            $penjualan->save(); 
         }
 
-        // Redirect ke halaman edit penjualan dengan membawa id penjualan yang baru
         return redirect()->route('penjualan.edit', ['id' => $penjualan->penjualan_id]);
     }
 
@@ -276,6 +275,8 @@ class PenjualanController extends Controller
             'tanggal_transaksi' => $request->tanggal_transaksi,
             'metode_pembayaran' => $request->metode_pembayaran,
             'status_pembayaran' => $request->status_pembayaran,
+            'status_order' => $request->status_order,
+            'marketing_id' => $request->marketing_id,
             'total_harga' => $request->grand_total,
             'laba_bersih' => $laba_bersih,
             'dibayar' => $dibayar
@@ -386,7 +387,7 @@ class PenjualanController extends Controller
 
             return response()->json([
                 'status'  => true,
-                'message' => 'Data transaksi beserta relasinya berhasil dihapus',
+                'message' => 'Data transaksi berhasil dihapus!',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

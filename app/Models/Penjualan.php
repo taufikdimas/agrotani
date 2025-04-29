@@ -41,4 +41,10 @@ class Penjualan extends Model
         return $this->hasMany(Cicilan::class, 'penjualan_id');
     }
 
+    public function marketing()
+    {
+        return $this->belongsTo(Marketing::class, 'marketing_id');
+    }
+    
+
 }

@@ -5,7 +5,7 @@
         <span class="app-brand-logo demo">
           <img src="{{ asset('sneat/assets/img/logo.png') }}" alt="Logo" width="40" />
         </span>
-      <span class="app-brand-text demo menu-text fw-bold ms-2">Argotani</span>
+      <span class="app-brand-text demo menu-text fw-bold ms-2">Agrotani</span>
     </a>
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
       <i class="bx bx-chevron-left d-block d-xl-none"></i>
@@ -81,7 +81,7 @@
     </li>
 
     <!-- Hutang & Piutang -->
-    <li class="menu-item {{ request()->is('hutang*') ? 'active open' : '' }}">
+    <li class="menu-item {{ request()->is('hutang*') || request()->is('piutang*') ? 'active open' : '' }}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons bx bx-wallet"></i>
         <div>Hutang & Piutang</div>
@@ -92,8 +92,8 @@
             <div>Hutang Customer</div>
           </a>
         </li>
-        <li class="menu-item {{ request()->is('marketing-report*') ? 'active' : '' }}">
-          <a href="{{ route('marketing-report.index') }}" class="menu-link">
+        <li class="menu-item {{ request()->is('piutang*') ? 'active' : '' }}">
+          <a href="{{ url('/piutang') }}" class="menu-link">
             <div>Piutang</div>
           </a>
         </li>

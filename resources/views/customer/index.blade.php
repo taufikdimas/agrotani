@@ -198,73 +198,73 @@
     }
 
     $(document).ready(function() {
-    function loadCustomers() {
-        $.ajax({
-            url: "{{ url('/customer/list') }}",
-            method: "GET",
-            data: {
-                status_hutang: $('#filter_status_hutang').val(),
-                search_customer: $('#search_customer').val(),
-                per_page: $('#select_per_page').val()
-            },
-            success: function(res) {
-                let html = '';
-                if (res.success && res.data.data.length > 0) {
-                    $.each(res.data.data, function(index, customer) {
-                        html += `
-                            <tr>
-                                <td>
-                                    <a href="${baseUrl}/customer/${customer.customer_id}/history">
-                                        ${customer.nama_customer}
-                                    </a>
-                                </td>
-                                <td>${customer.perusahaan_customer ?? '-'}</td>
-                                <td>${customer.alamat_customer ?? '-'}</td>
-                                <td>${customer.no_hp_customer ?? '-'}</td>
-                                <td>Rp${parseFloat(customer.hutang_customer).toLocaleString('id-ID', {minimumFractionDigits: 2})}</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                            <i class="icon-base bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('${baseUrl}/customer/${customer.customer_id}/edit')">
-                                                <i class="icon-base bx bx-edit-alt me-1"></i> Edit
-                                            </a>
-                                            <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('${baseUrl}/customer/${customer.customer_id}/delete')">
-                                                <i class="icon-base bx bx-trash me-1"></i> Delete
-                                            </a>
+        function loadCustomers() {
+            $.ajax({
+                url: "{{ url('/customer/list') }}",
+                method: "GET",
+                data: {
+                    status_hutang: $('#filter_status_hutang').val(),
+                    search_customer: $('#search_customer').val(),
+                    per_page: $('#select_per_page').val()
+                },
+                success: function(res) {
+                    let html = '';
+                    if (res.success && res.data.data.length > 0) {
+                        $.each(res.data.data, function(index, customer) {
+                            html += `
+                                <tr>
+                                    <td>
+                                        <a href="${baseUrl}/customer/${customer.customer_id}/history">
+                                            ${customer.nama_customer}
+                                        </a>
+                                    </td>
+                                    <td>${customer.perusahaan_customer ?? '-'}</td>
+                                    <td>${customer.alamat_customer ?? '-'}</td>
+                                    <td>${customer.no_hp_customer ?? '-'}</td>
+                                    <td>Rp${parseFloat(customer.hutang_customer).toLocaleString('id-ID', {minimumFractionDigits: 2})}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <i class="icon-base bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('${baseUrl}/customer/${customer.customer_id}/edit')">
+                                                    <i class="icon-base bx bx-edit-alt me-1"></i> Edit
+                                                </a>
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="modalAction('${baseUrl}/customer/${customer.customer_id}/delete')">
+                                                    <i class="icon-base bx bx-trash me-1"></i> Delete
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
+                                    </td>
+                                </tr>
+                            `;
 
-                    });
-                } else {
-                    html = `<tr><td colspan="6" class="text-center">Tidak ada data ditemukan</td></tr>`;
+                        });
+                    } else {
+                        html = `<tr><td colspan="6" class="text-center">Tidak ada data ditemukan</td></tr>`;
+                    }
+
+                    $('#list_customer').html(html);
+                },
+                error: function(err) {
+                    console.log(err);
                 }
+            });
+        }
 
-                $('#list_customer').html(html);
-            },
-            error: function(err) {
-                console.log(err);
-            }
+        // Panggil pertama kali
+        loadCustomers();
+
+        // Event change filter dan search
+        $('#filter_status_hutang, #select_per_page').on('change', function() {
+            loadCustomers();
         });
-    }
 
-    // Panggil pertama kali
-    loadCustomers();
-
-    // Event change filter dan search
-    $('#filter_status_hutang, #select_per_page').on('change', function() {
-        loadCustomers();
+        $('#search_customer').on('keyup', function() {
+            loadCustomers();
+        });
     });
-
-    $('#search_customer').on('keyup', function() {
-        loadCustomers();
-    });
-});
 
     $(document).on('submit', 'form', function(e) {
         e.preventDefault();
