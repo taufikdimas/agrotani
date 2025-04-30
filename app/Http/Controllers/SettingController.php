@@ -33,4 +33,20 @@ class SettingController extends Controller
         return redirect()->route('settings.index')
             ->with('success', 'Pengaturan berhasil diperbarui');
     }
+
+    public function companyInfo()
+    {
+        $settings = Setting::where('group', 'company')
+            ->get()
+            ->pluck('value', 'key');
+            
+        return view('penjualan.invoice', [
+            'companyLogo' => $settings['company_logo'] ?? null,
+            'companyName' => $settings['company_name'] ?? null,
+            'companyAddress' => $settings['company_address'] ?? null,
+            'companyCity' => $settings['company_city'] ?? null,
+            'companyPhone' => $settings['company_phone'] ?? null,
+            'companyEmail' => $settings['company_email'] ?? null
+        ]);
+    }
 }

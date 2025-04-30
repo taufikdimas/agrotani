@@ -37,16 +37,25 @@
             <div class="card-body invoice-preview-header rounded">
                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column align-items-xl-center align-items-md-start align-items-sm-center align-items-start">
                     <div class="mb-xl-0 mb-6 text-heading">
-                        <div class="d-flex svg-illustration mb-6 gap-2 align-items-center">
-                            @if(Setting::getValue('company_logo'))
-                                <img src="{{ asset('storage/' . Setting::getValue('company_logo')) }}" alt="Logo" style="height: 40px;">
-                            @endif
-                            <span class="app-brand-text demo fw-bold ms-50 lh-1">{{ Setting::getValue('company_name') }}</span>
-                        </div>
-                        <p class="mb-2">{{ Setting::getValue('company_address') }}</p>
-                        <p class="mb-2">{{ Setting::getValue('company_city') }}</p>
-                        <p class="mb-0">{{ Setting::getValue('company_phone') }}</p>
+                    <div class="d-flex svg-illustration mb-6 gap-2 align-items-center">
+                        <img src="{{ asset('storage/' . $companyInfo['companyLogo']) }}" alt="Logo Perusahaan" style="width: 40px">
+
+                        <span class="app-brand-text demo fw-bold ms-50 lh-1">
+                            {{ $companyInfo['companyName'] ?? 'Nama Perusahaan Default' }}
+                        </span>
                     </div>
+
+                    <p class="mb-2">
+                        <i class="bx bx-map me-1"></i> {{ $companyInfo['companyAddress'] ?? 'Alamat Default' }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bx bx-current-location me-1"></i> {{ $companyInfo['companyCity'] ?? 'Kota Default' }}
+                    </p>
+                    <p class="mb-0">
+                        <i class="bx bx-phone me-1"></i> {{ $companyInfo['companyPhone'] ?? '000-0000-0000' }}
+                    </p>
+
+                </div>
 
                     <div>
                         <h5 class="mb-6">Invoice #{{ $penjualan->kode_transaksi }}</h5>
@@ -150,10 +159,6 @@
                             </td>
                             <td class="px-0 py-6 w-px-100">
                                 <p class="mb-2">Subtotal:</p>
-                                @if($penjualan->diskon > 0)
-                                <p class="mb-2">Diskon:</p>
-                                @endif
-                                <p class="mb-2">Pajak:</p>
                                 <p class="mb-2 border-bottom pb-2">Total Dibayar:</p>
                                 @if($penjualan->status_pembayaran == 'Belum Lunas')
                                 <p class="mb-0">Sisa Tagihan:</p>
@@ -161,10 +166,6 @@
                             </td>
                             <td class="text-end px-0 py-6 w-px-100 fw-medium text-heading">
                                 <p class="fw-medium mb-2">Rp {{ number_format($penjualan->total_harga, 0, ',', '.') }}</p>
-                                @if($penjualan->diskon > 0)
-                                <p class="fw-medium mb-2">Rp {{ number_format($penjualan->diskon, 0, ',', '.') }}</p>
-                                @endif
-                                <p class="fw-medium mb-2">Rp {{ number_format($penjualan->pajak ?? 0, 0, ',', '.') }}</p>
                                 <p class="fw-medium mb-2 border-bottom pb-2">Rp {{ number_format($penjualan->dibayar, 0, ',', '.') }}</p>
                                 @if($penjualan->status_pembayaran == 'Belum Lunas')
                                 <p class="fw-medium mb-0 text-danger">
@@ -187,9 +188,12 @@
                             @if($penjualan->status_pembayaran == 'Lunas')
                                 Pembayaran telah diterima secara penuh. Terima kasih.
                             @else
-                                Silakan melakukan pembayaran sebelum tanggal jatuh tempo. Pembayaran dapat dilakukan via transfer ke rekening:
+                                Silakan melakukan pembayaran sebelum tanggal jatuh tempo. 
                                 <br>
-                                Bank: {{ setting('bank_name') }} - No. Rek: {{ setting('bank_account') }} a.n {{ setting('company_name') }}
+                                Pembayaran dapat dilakukan via transfer ke rekening:
+                                <br>
+                                <br>
+                                <strong>{{ setting('bank_name') }} - No. Rek: {{ setting('bank_account') }} a.n {{ setting('bank_holder') }}</strong>
                             @endif
                         </span>
                     </div>

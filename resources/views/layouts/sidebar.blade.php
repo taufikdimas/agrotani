@@ -1,12 +1,12 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
   <div class="app-brand demo">
-    <a href="{{ route('dashboard') }}" class="app-brand-link">
-      <span class="app-brand-logo demo">
+    <a href="{{ route('dashboard') }}" class="app-brand-link d-flex align-items-center">
         <span class="app-brand-logo demo">
-          <img src="{{ asset('sneat/assets/img/logo.png') }}" alt="Logo" width="40" />
+            <img src="{{ asset('storage/logo.png') }}" alt="Logo Perusahaan" style="width: 40px">
         </span>
-      <span class="app-brand-text demo menu-text fw-bold ms-2">Agrotani</span>
+        <span class="app-brand-text demo menu-text fw-bold ms-2">Agrotani</span>
     </a>
+
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
       <i class="bx bx-chevron-left d-block d-xl-none"></i>
     </a>

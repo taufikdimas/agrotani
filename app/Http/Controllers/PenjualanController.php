@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Cicilan;
 use App\Models\Produk;
 use App\Models\Stok;
+use App\Models\Setting;
 use App\Models\Marketing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -408,7 +409,23 @@ class PenjualanController extends Controller
             'cicilan'
         ])->findOrFail($id);
 
-        return view('penjualan.invoice', compact('penjualan'));
+        // Ambil data company dari settings
+        $companySettings = Setting::where('group', 'company')
+            ->get()
+            ->pluck('value', 'key');
+
+        // Buat array untuk data company
+        $companyInfo = [
+            'companyLogo' => $companySettings['company_logo'] ?? null,
+            'companyName' => $companySettings['company_name'] ?? null,
+            'companyAddress' => $companySettings['company_address'] ?? null,
+            'companyPhone' => $companySettings['company_phone'] ?? null,
+            'companyEmail' => $companySettings['company_email'] ?? null,
+            'companyCity' => $companySettings['company_city'] ?? null,
+        ];
+
+        return view('penjualan.invoice', compact('penjualan', 'companyInfo'));
     }
+
 
 }

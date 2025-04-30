@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Marketing extends Model
 {
@@ -18,8 +19,26 @@ class Marketing extends Model
         'status' => 'string',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->created_by = Auth::user()->nama;
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+    }
+
     public function penjualan()
-{
-    return $this->hasMany(Penjualan::class, 'marketing_id');
-}
+    {
+        return $this->hasMany(Penjualan::class, 'marketing_id');
+    }
 }
