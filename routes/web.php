@@ -12,6 +12,7 @@ use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\PiutangDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,7 +36,6 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 // Ajax
 Route::get('/ajax/customer-list', [AjaxController::class, 'get_customer_list']);
 Route::get('/ajax/customer-detail/{id}', [AjaxController::class, 'get_customer_detail']);
-
 Route::get('/ajax/produk-list', [ProdukController::class, 'produk_list'])->name('ajax.produk.list');
 Route::get('/produk/list', [ProdukController::class, 'list'])->name('produk.list');
 Route::get('/customer/list', [CustomerController::class, 'list'])->name('customer.list');
@@ -130,4 +130,19 @@ Route::prefix('piutang')->group(function () {
     Route::get('/import', [PiutangController::class, 'import']);
     Route::get('/export_excel', [PiutangController::class, 'export_excel']);
     Route::get('/export_pdf', [PiutangController::class, 'export_pdf']);
+});
+
+// User
+Route::prefix('user')->group(function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::get('/list', [UserController::class, 'list']);
+    Route::get('/create', [UserController::class, 'create']);
+    Route::post('/', [UserController::class, 'store']);
+    Route::get('/{id}/edit', [UserController::class, 'edit']);
+    Route::put('/{id}', [UserController::class, 'update']);
+    Route::get('/{id}/delete', [UserController::class, 'confirm']);
+    Route::delete('/{id}/delete', [UserController::class, 'delete']);
+    Route::get('/import', [UserController::class, 'import']);             // opsional: jika ingin impor user
+    Route::get('/export_excel', [UserController::class, 'export_excel']); // opsional
+    Route::get('/export_pdf', [UserController::class, 'export_pdf']);     // opsional
 });
