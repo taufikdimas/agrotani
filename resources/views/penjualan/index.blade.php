@@ -204,9 +204,9 @@
                                     <p class="{{ $penjualan['status_pembayaran'] == 'lunas' ? 'text-primary' : 'text-danger' }}">
                                         <strong>Total Bayar:</strong> {{ number_format($penjualan['dibayar'], 0, ',', '.') }}
                                     </p>
-                                    <button type="button" class="btn btn-outline-primary mt-3">
+                                    <a href="{{ route('penjualan.invoice', $penjualan['penjualan_id']) }}" class="btn btn-outline-primary mt-3" target="_blank">
                                         <span class="icon-base bx bx-printer icon-sm me-2"></span>Cetak Invoice
-                                    </button>
+                                    </a>
                                 </div>
                                 <div class="col-5">
                                     <div class="table-responsive">

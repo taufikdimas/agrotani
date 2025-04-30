@@ -18,11 +18,6 @@ class Marketing extends Model
         'status' => 'string',
     ];
 
-    public function marketingReport()
-    {
-        return $this->hasMany(MarketingReport::class, 'marketing_id');
-    }
-
     public function penjualan()
 {
     return $this->hasMany(Penjualan::class, 'marketing_id');
