@@ -137,7 +137,7 @@
                     <option value="100">100</option>
                 </select>
             </div>
-            <div class="col-md-3 "> 
+            <div class="col-md-3 text-end"> 
                 <button type="button" class="btn btn-primary w-80" id="createMarketingBtn" onclick="modalAction('{{ url('marketing/create') }}')">
                     <i class="bx bx-plus me-2"></i> Tambah Marketing
                 </button>
