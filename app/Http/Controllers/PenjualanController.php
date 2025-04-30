@@ -399,5 +399,16 @@ class PenjualanController extends Controller
         }
     }
 
+    public function invoice($id)
+    {
+        $penjualan = Penjualan::with([
+            'customer',
+            'marketing',
+            'detailPenjualan.produk',
+            'cicilan'
+        ])->findOrFail($id);
+
+        return view('penjualan.invoice', compact('penjualan'));
+    }
 
 }

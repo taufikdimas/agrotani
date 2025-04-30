@@ -107,5 +107,14 @@
         </li>
       </ul>
     </li>
+
+    <!-- Setting -->
+    <li class="menu-item {{ request()->routeIs('settings') ? 'active' : '' }}">
+      <a href="{{ url('/settings') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-cog"></i>
+        <div class="text-truncate" data-i18n="settings">Pengaturan Sistem</div>
+        <span class="badge rounded-pill bg-danger ms-auto"></span>
+      </a>
+    </li>
   </ul>
 </aside>

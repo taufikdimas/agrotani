@@ -13,6 +13,9 @@ use App\Http\Controllers\PiutangDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\HutangPiutangController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +43,7 @@ Route::get('/ajax/produk-list', [ProdukController::class, 'produk_list'])->name(
 Route::get('/produk/list', [ProdukController::class, 'list'])->name('produk.list');
 Route::get('/customer/list', [CustomerController::class, 'list'])->name('customer.list');
 Route::post('/customer/store', [CustomerController::class, 'save'])->name('customer.store');
+Route::resource('settings', SettingController::class)->only(['index', 'edit', 'update']);
 
 // Resource routes (CRUD)
 Route::resources([
@@ -113,6 +117,7 @@ Route::prefix('penjualan')->group(function () {
     Route::get('/import', [PenjualanController::class, 'import']);
     Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
     Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
+    Route::get('/{id}/invoice', [PenjualanController::class, 'invoice'])->name('penjualan.invoice');
 });
 
 Route::prefix('piutang')->group(function () {
@@ -145,4 +150,17 @@ Route::prefix('user')->group(function () {
     Route::get('/import', [UserController::class, 'import']);             // opsional: jika ingin impor user
     Route::get('/export_excel', [UserController::class, 'export_excel']); // opsional
     Route::get('/export_pdf', [UserController::class, 'export_pdf']);     // opsional
+  
+Route::prefix('marketing')->group(function () {
+    Route::get('/', [MarketingController::class, 'index']);
+    Route::get('/marketing/list', [MarketingController::class, 'list'])->name('marketing.list');
+    Route::get('/create', [MarketingController::class, 'create']);
+    Route::post('/', [MarketingController::class, 'store']);
+    Route::get('/{id}/edit', [MarketingController::class, 'edit']);
+    Route::put('/{id}', [MarketingController::class, 'update']);
+    Route::get('/{id}/delete', [MarketingController::class, 'confirm']);
+    Route::delete('/{id}/delete', [MarketingController::class, 'delete']);
+    Route::get('/export_excel', [MarketingController::class, 'export_excel']);
+    Route::get('/export_pdf', [MarketingController::class, 'export_pdf']);
+
 });
