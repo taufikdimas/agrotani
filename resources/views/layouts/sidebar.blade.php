@@ -48,8 +48,16 @@
     <!-- Customer -->
     <li class="menu-item {{ request()->is('customer*') ? 'active' : '' }}">
       <a href="{{ url('/customer') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-user"></i>
+        <i class="menu-icon tf-icons bx bx-group"></i>
         <div>Customer</div>
+      </a>
+    </li>
+
+    <!-- User -->
+    <li class="menu-item {{ request()->is('user*') ? 'active' : '' }}">
+      <a href="{{ url('/user') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-user"></i>
+        <div>Data User</div>
       </a>
     </li>
 

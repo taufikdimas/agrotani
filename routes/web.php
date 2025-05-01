@@ -4,16 +4,18 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HutangPiutangController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\MarketingReportController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenjualanDetailController;
+use App\Http\Controllers\PiutangController;
+use App\Http\Controllers\PiutangDetailController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\HutangPiutangController;
-use App\Http\Controllers\PiutangController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -160,3 +162,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export_pdf', [UserController::class, 'export_pdf']);     // opsional
     });
 });
+
+
+

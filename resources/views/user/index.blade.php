@@ -34,7 +34,7 @@
                     <tr>
                         <th>Nama</th>
                         <th>Username</th>
-                        <th>Email</th>
+                        <th>Email</th>n
                         <th>Role</th>
                         <th>Aksi</th>
                     </tr>
