@@ -13,9 +13,11 @@ use App\Http\Controllers\StokController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\HutangPiutangController;
 use App\Http\Controllers\PiutangController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
+Route::get('/', [AuthController::class, 'redirectTo']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -141,5 +143,20 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}/delete', [MarketingController::class, 'delete']);
         Route::get('/export_excel', [MarketingController::class, 'export_excel']);
         Route::get('/export_pdf', [MarketingController::class, 'export_pdf']);
+    });
+
+    // User
+    Route::prefix('user')->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('/list', [UserController::class, 'list']);
+        Route::get('/create', [UserController::class, 'create']);
+        Route::post('/', [UserController::class, 'store']);
+        Route::get('/{id}/edit', [UserController::class, 'edit']);
+        Route::put('/{id}', [UserController::class, 'update']);
+        Route::get('/{id}/delete', [UserController::class, 'confirm']);
+        Route::delete('/{id}/delete', [UserController::class, 'delete']);
+        Route::get('/import', [UserController::class, 'import']);             // opsional: jika ingin impor user
+        Route::get('/export_excel', [UserController::class, 'export_excel']); // opsional
+        Route::get('/export_pdf', [UserController::class, 'export_pdf']);     // opsional
     });
 });

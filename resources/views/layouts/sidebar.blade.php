@@ -1,16 +1,17 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
   <div class="app-brand demo">
-    <a href="{{ route('dashboard') }}" class="app-brand-link d-flex align-items-center">
-        <span class="app-brand-logo demo">
-            <img src="{{ asset('storage/logo.png') }}" alt="Logo Perusahaan" style="width: 40px">
-        </span>
-        <span class="app-brand-text demo menu-text fw-bold ms-2">Agrotani</span>
-    </a>
+        <a href="{{ route('dashboard') }}" class="app-brand-link d-flex align-items-center">
+            <span class="app-brand-logo demo">
+                <img src="{{ asset('logo.png') }}" alt="Logo Perusahaan" style="width: 40px">
+            </span>
+            <span class="app-brand-text demo menu-text fw-bold ms-2">Agrotani</span>
+        </a>
+    
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+            <i class="bx bx-chevron-left d-block d-xl-none"></i>
+        </a>
+    </div>
 
-    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
-      <i class="bx bx-chevron-left d-block d-xl-none"></i>
-    </a>
-  </div>
 
   <div class="menu-inner-shadow"></div>
 
@@ -100,13 +101,32 @@
       </ul>
     </li>
 
-    <!-- Setting -->
-    <li class="menu-item {{ request()->routeIs('settings') ? 'active' : '' }}">
+    <!-- Pengaturan Sistem -->
+    <li class="menu-item {{ request()->is('settings*') ? 'active' : '' }}">
       <a href="{{ url('/settings') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-cog"></i>
-        <div class="text-truncate" data-i18n="settings">Pengaturan Sistem</div>
-        <span class="badge rounded-pill bg-danger ms-auto"></span>
+        <div>Pengaturan Sistem</div>
       </a>
     </li>
+
+    <!-- User -->
+    <li class="menu-item {{ request()->is('user*') ? 'active' : '' }}">
+      <a href="{{ url('/user') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-user"></i>
+        <div>Data Pengguna</div>
+      </a>
+    </li>
+    <!-- Logout -->
+    <li class="menu-item">
+      <a href="#" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <i class="menu-icon tf-icons bx bx-log-out"></i>
+        <div>Logout</div>
+      </a>
+
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+      </form>
+    </li>
+
   </ul>
 </aside>

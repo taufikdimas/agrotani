@@ -13,6 +13,14 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function redirectTo()
+    {
+        if (auth()->check()) {
+            return redirect('/dashboard');
+        }
+        return redirect('/login');
+    }
+
     // Proses login
     public function login(Request $request)
     {

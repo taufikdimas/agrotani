@@ -56,7 +56,7 @@
               <div class="app-brand justify-content-center">
                 <a href="index.html" class="app-brand-link gap-2">
                     <span class="app-brand-logo demo">
-                        <img src="{{ asset('storage/logo.png') }}" alt="Logo Perusahaan" style="width: 40px">
+                        <img src="{{ asset('logo.png') }}" alt="Logo Perusahaan" style="width: 40px">
                     </span>
                     <span class="app-brand-text demo text-heading fw-bold">Agrotani</span>
                 </a>

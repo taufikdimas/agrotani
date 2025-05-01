@@ -1,5 +1,3 @@
-
-
 @extends('layouts.app')
 
 @section('title', 'Dashboard.index')
@@ -14,7 +12,6 @@ function trendIcon($value) {
 }
 @endphp
   <div class="row">
-      {{-- Jumlah Order --}}
       <div class="col-lg-3 col-sm-6">
         <div class="card">
           <div class="card-body">
@@ -45,7 +42,7 @@ function trendIcon($value) {
               <div class="card-info">
                 <p class="text-heading mb-1">Penjualan Kotor</p>
                 <div class="d-flex align-items-center mb-1">
-                  <h4 class="card-title mb-0 me-2">Rp{{ number_format($penjualanKotor, 0, ',', '.') }}</h4>
+                  <h4 class="card-title mb-0 me-2">{{ number_format($penjualanKotor, 0, ',', '.') }}</h4>
                   <span class="{{ trendClass($persenKotor) }}">({{ $persenKotor }}%)</span>
                 </div>
                 <span>Periode saat ini</span>
@@ -68,7 +65,7 @@ function trendIcon($value) {
               <div class="card-info">
                 <p class="text-heading mb-1">Penjualan Bersih</p>
                 <div class="d-flex align-items-center mb-1">
-                  <h4 class="card-title mb-0 me-2">Rp{{ number_format($penjualanBersih, 0, ',', '.') }}</h4>
+                  <h4 class="card-title mb-0 me-2">{{ number_format($penjualanBersih, 0, ',', '.') }}</h4>
                   <span class="{{ trendClass($persenBersih) }}">({{ $persenBersih }}%)</span>
                 </div>
                 <span>Periode saat ini</span>
@@ -161,7 +158,7 @@ function trendIcon($value) {
             <div class="card-info">
               <p class="text-heading mb-1">HPP</p>
               <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">Rp{{ number_format($hpp, 0, ',', '.') }}</h4>
+                <h4 class="card-title mb-0 me-2">{{ number_format($hpp, 0, ',', '.') }}</h4>
                 <span class="{{ trendClass($persenHpp) }}">({{ $persenHpp }}%)</span>
               </div>
               <span>Periode saat ini</span>
@@ -184,7 +181,7 @@ function trendIcon($value) {
             <div class="card-info">
               <p class="text-heading mb-1">Rugi</p>
               <div class="d-flex align-items-center mb-1">
-                <h4 class="card-title mb-0 me-2">Rp{{ number_format($rugi, 0, ',', '.') }}</h4>
+                <h4 class="card-title mb-0 me-2">{{ number_format($rugi, 0, ',', '.') }}</h4>
                 <span class="{{ trendClass($persenRugi) }}">({{ $persenRugi }}%)</span>
               </div>
               <span>Periode saat ini</span>
@@ -202,280 +199,270 @@ function trendIcon($value) {
 
   <div class="row mt-4">
     <!-- Line Charts -->
-    <div class="col-12 mb-6">
-      <div class="card h-100">
-        <div class="card-header header-elements">
-          <div>
-            <h5 class="card-title mb-0">Statistics</h5>
-            <small class="text-body-secondary">Commercial networks and enterprises</small>
+  <div class="col-12 mb-4">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="card-title mb-0">Statistik</h5>
+              <small class="text-muted">Jumlah Order, Penjualan Kotor & Bersih (per hari)</small>
+            </div>
           </div>
-          <div class="card-header-elements ms-auto py-0">
-            <h5 class="mb-0 me-4">$ 78,000</h5>
-            <span class="badge bg-label-secondary">
-              <i class="icon-base bx bx-up-arrow-alt icon-xs text-success"></i>
-              <span class="align-middle">37%</span>
-            </span>
+          <div class="card-body pt-2">
+            <canvas id="lineChart" height="100"></canvas>
           </div>
         </div>
-        <div class="card-body pt-2">
-          <div id="legendContainer" class="custom-legend"></div>
-          <div>
-            <canvas id="lineChart" class="chartjs" data-height="500"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- /Line Charts -->
+      </div>   
+     <!-- /Line Charts -->
   </div>
-  <div class="row g-6">
-    <!-- Employee List -->
-    <div class="col-md-6 col-xxl-5">
-      <div class="card">
-        <div class="card-header d-flex align-items-center justify-content-between">
-          <h5 class="card-title m-0 me-2">Employee List</h5>
-          <div class="dropdown">
-            <button class="btn text-body-secondary p-0" type="button" id="employeeList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="icon-base bx bx-dots-vertical-rounded icon-lg"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="employeeList">
-              <a class="dropdown-item" href="javascript:void(0);">Featured Employees</a>
-              <a class="dropdown-item" href="javascript:void(0);">Based on Task</a>
-              <a class="dropdown-item" href="javascript:void(0);">See All</a>
+    {{-- <div class="row g-6">
+      <!-- Employee List -->
+      <div class="col-md-6 col-xxl-5">
+        <div class="card">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title m-0 me-2">Employee List</h5>
+            <div class="dropdown">
+              <button class="btn text-body-secondary p-0" type="button" id="employeeList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="icon-base bx bx-dots-vertical-rounded icon-lg"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="employeeList">
+                <a class="dropdown-item" href="javascript:void(0);">Featured Employees</a>
+                <a class="dropdown-item" href="javascript:void(0);">Based on Task</a>
+                <a class="dropdown-item" href="javascript:void(0);">See All</a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-body pt-4">
-          <ul class="p-0 m-0">
-            <li class="d-flex align-items-center mb-6">
-              <div class="avatar flex-shrink-0 me-3">
-                <img src="../../assets/img/avatars/20.png" alt="User" class="rounded" />
-              </div>
-              <div class="d-flex w-100 align-items-center gap-2">
-                <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
-                  <div>
-                    <h6 class="mb-0 fw-normal">Alberta</h6>
-                    <small>UI Designer</small>
-                  </div>
-
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0 fw-normal">100h:</h6>
-                    <span class="text-body-secondary">138h</span>
-                  </div>
+          <div class="card-body pt-4">
+            <ul class="p-0 m-0">
+              <li class="d-flex align-items-center mb-6">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img src="../../assets/img/avatars/20.png" alt="User" class="rounded" />
                 </div>
+                <div class="d-flex w-100 align-items-center gap-2">
+                  <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
+                    <div>
+                      <h6 class="mb-0 fw-normal">Alberta</h6>
+                      <small>UI Designer</small>
+                    </div>
 
-                <div class="chart-progress" data-color="secondary" data-series="85"></div>
-              </div>
-            </li>
-            <li class="d-flex align-items-center mb-6">
-              <div class="avatar flex-shrink-0 me-3">
-                <img src="../../assets/img/avatars/3.png" alt="User" class="rounded" />
-              </div>
-              <div class="d-flex w-100 align-items-center gap-2">
-                <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
-                  <div>
-                    <h6 class="mb-0 fw-normal">Paul</h6>
-                    <small>Branding</small>
+                    <div class="user-progress d-flex align-items-center gap-1">
+                      <h6 class="mb-0 fw-normal">100h:</h6>
+                      <span class="text-body-secondary">138h</span>
+                    </div>
                   </div>
 
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0 fw-normal">121h:</h6>
-                    <span class="text-body-secondary">109h</span>
-                  </div>
+                  <div class="chart-progress" data-color="secondary" data-series="85"></div>
                 </div>
-
-                <div class="chart-progress" data-color="warning" data-series="70"></div>
-              </div>
-            </li>
-            <li class="d-flex align-items-center mb-6">
-              <div class="avatar flex-shrink-0 me-3">
-                <img src="../../assets/img/avatars/15.png" alt="User" class="rounded" />
-              </div>
-              <div class="d-flex w-100 align-items-center gap-2">
-                <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
-                  <div>
-                    <h6 class="mb-0 fw-normal">Nannie</h6>
-                    <small>iOS Developer</small>
-                  </div>
-
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0 fw-normal">112h:</h6>
-                    <span class="text-body-secondary">160h</span>
-                  </div>
+              </li>
+              <li class="d-flex align-items-center mb-6">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img src="../../assets/img/avatars/3.png" alt="User" class="rounded" />
                 </div>
+                <div class="d-flex w-100 align-items-center gap-2">
+                  <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
+                    <div>
+                      <h6 class="mb-0 fw-normal">Paul</h6>
+                      <small>Branding</small>
+                    </div>
 
-                <div class="chart-progress" data-color="primary" data-series="25"></div>
-              </div>
-            </li>
-            <li class="d-flex align-items-center mb-6">
-              <div class="avatar flex-shrink-0 me-3">
-                <img src="../../assets/img/avatars/14.png" alt="User" class="rounded" />
-              </div>
-              <div class="d-flex w-100 align-items-center gap-2">
-                <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
-                  <div>
-                    <h6 class="mb-0 fw-normal">Rodney</h6>
-                    <small>iOS Developer</small>
+                    <div class="user-progress d-flex align-items-center gap-1">
+                      <h6 class="mb-0 fw-normal">121h:</h6>
+                      <span class="text-body-secondary">109h</span>
+                    </div>
                   </div>
 
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0 fw-normal">125h:</h6>
-                    <span class="text-body-secondary">166h</span>
-                  </div>
+                  <div class="chart-progress" data-color="warning" data-series="70"></div>
                 </div>
-
-                <div class="chart-progress" data-color="danger" data-series="75"></div>
-              </div>
-            </li>
-            <li class="d-flex align-items-center mb-6">
-              <div class="avatar flex-shrink-0 me-3">
-                <img src="../../assets/img/avatars/7.png" alt="User" class="rounded" />
-              </div>
-              <div class="d-flex w-100 align-items-center gap-2">
-                <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
-                  <div>
-                    <h6 class="mb-0 fw-normal">Martin</h6>
-                    <small>Product Designer</small>
-                  </div>
-
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0 fw-normal">76h:</h6>
-                    <span class="text-body-secondary">89h</span>
-                  </div>
+              </li>
+              <li class="d-flex align-items-center mb-6">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img src="../../assets/img/avatars/15.png" alt="User" class="rounded" />
                 </div>
+                <div class="d-flex w-100 align-items-center gap-2">
+                  <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
+                    <div>
+                      <h6 class="mb-0 fw-normal">Nannie</h6>
+                      <small>iOS Developer</small>
+                    </div>
 
-                <div class="chart-progress" data-color="info" data-series="60"></div>
-              </div>
-            </li>
-            <li class="d-flex">
-              <div class="avatar flex-shrink-0 me-3">
-                <img src="../../assets/img/avatars/18.png" alt="User" class="rounded" />
-              </div>
-              <div class="d-flex w-100 align-items-center gap-2">
-                <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
-                  <div>
-                    <h6 class="mb-0 fw-normal">Nancy</h6>
-                    <small>PHP Developer</small>
+                    <div class="user-progress d-flex align-items-center gap-1">
+                      <h6 class="mb-0 fw-normal">112h:</h6>
+                      <span class="text-body-secondary">160h</span>
+                    </div>
                   </div>
 
-                  <div class="user-progress d-flex align-items-center gap-1">
-                    <h6 class="mb-0 fw-normal">22h:</h6>
-                    <span class="text-body-secondary">45h</span>
-                  </div>
+                  <div class="chart-progress" data-color="primary" data-series="25"></div>
                 </div>
+              </li>
+              <li class="d-flex align-items-center mb-6">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img src="../../assets/img/avatars/14.png" alt="User" class="rounded" />
+                </div>
+                <div class="d-flex w-100 align-items-center gap-2">
+                  <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
+                    <div>
+                      <h6 class="mb-0 fw-normal">Rodney</h6>
+                      <small>iOS Developer</small>
+                    </div>
 
-                <div class="chart-progress" data-color="warning" data-series="45"></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!--/ Employee List -->
-    <!-- Team Members -->
-    <div class="col-lg-12 col-xxl-7">
-      <div class="card h-100">
-        <div class="card-header d-flex align-items-center justify-content-between">
-          <h5 class="card-title m-0 me-2">Team Members</h5>
-          <div class="dropdown">
-            <button class="btn text-body-secondary p-0" type="button" id="teamMemberList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="icon-base bx bx-dots-vertical-rounded icon-lg"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="teamMemberList">
-              <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-              <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-              <a class="dropdown-item" href="javascript:void(0);">Share</a>
-            </div>
+                    <div class="user-progress d-flex align-items-center gap-1">
+                      <h6 class="mb-0 fw-normal">125h:</h6>
+                      <span class="text-body-secondary">166h</span>
+                    </div>
+                  </div>
+
+                  <div class="chart-progress" data-color="danger" data-series="75"></div>
+                </div>
+              </li>
+              <li class="d-flex align-items-center mb-6">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img src="../../assets/img/avatars/7.png" alt="User" class="rounded" />
+                </div>
+                <div class="d-flex w-100 align-items-center gap-2">
+                  <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
+                    <div>
+                      <h6 class="mb-0 fw-normal">Martin</h6>
+                      <small>Product Designer</small>
+                    </div>
+
+                    <div class="user-progress d-flex align-items-center gap-1">
+                      <h6 class="mb-0 fw-normal">76h:</h6>
+                      <span class="text-body-secondary">89h</span>
+                    </div>
+                  </div>
+
+                  <div class="chart-progress" data-color="info" data-series="60"></div>
+                </div>
+              </li>
+              <li class="d-flex">
+                <div class="avatar flex-shrink-0 me-3">
+                  <img src="../../assets/img/avatars/18.png" alt="User" class="rounded" />
+                </div>
+                <div class="d-flex w-100 align-items-center gap-2">
+                  <div class="d-flex justify-content-between flex-grow-1 flex-wrap">
+                    <div>
+                      <h6 class="mb-0 fw-normal">Nancy</h6>
+                      <small>PHP Developer</small>
+                    </div>
+
+                    <div class="user-progress d-flex align-items-center gap-1">
+                      <h6 class="mb-0 fw-normal">22h:</h6>
+                      <span class="text-body-secondary">45h</span>
+                    </div>
+                  </div>
+
+                  <div class="chart-progress" data-color="warning" data-series="45"></div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-borderless table-sm">
-            <thead>
-              <tr>
-                <th class="ps-6">Name</th>
-                <th>Project</th>
-                <th>Task</th>
-                <th class="pe-6">Progress</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="d-flex justify-content-start align-items-center">
-                    <div class="avatar me-3">
-                      <img src="../../assets/img/avatars/17.png" alt="Avatar" class="rounded-circle" />
+      </div>
+      <!--/ Employee List -->
+      <!-- Team Members -->
+      <div class="col-lg-12 col-xxl-7">
+        <div class="card h-100">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title m-0 me-2">Team Members</h5>
+            <div class="dropdown">
+              <button class="btn text-body-secondary p-0" type="button" id="teamMemberList" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="icon-base bx bx-dots-vertical-rounded icon-lg"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="teamMemberList">
+                <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                <a class="dropdown-item" href="javascript:void(0);">Share</a>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-borderless table-sm">
+              <thead>
+                <tr>
+                  <th class="ps-6">Name</th>
+                  <th>Project</th>
+                  <th>Task</th>
+                  <th class="pe-6">Progress</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="avatar me-3">
+                        <img src="../../assets/img/avatars/17.png" alt="Avatar" class="rounded-circle" />
+                      </div>
+                      <div class="d-flex flex-column">
+                        <h6 class="mb-0 text-truncate">Nathan Wagner</h6>
+                        <small class="text-truncate text-body">iOS Developer</small>
+                      </div>
                     </div>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-0 text-truncate">Nathan Wagner</h6>
-                      <small class="text-truncate text-body">iOS Developer</small>
+                  </td>
+                  <td><span class="badge bg-label-primary text-uppercase">Zipcar</span></td>
+                  <td><span class="fw-medium">87/135</span></td>
+                  <td>
+                    <div class="chart-progress" data-color="primary" data-series="65"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="avatar me-3">
+                        <img src="../../assets/img/avatars/8.png" alt="Avatar" class="rounded-circle" />
+                      </div>
+                      <div class="d-flex flex-column">
+                        <h6 class="mb-0 text-truncate">Emma Bowen</h6>
+                        <small class="text-truncate text-body">UI/UX Designer</small>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td><span class="badge bg-label-primary text-uppercase">Zipcar</span></td>
-                <td><span class="fw-medium">87/135</span></td>
-                <td>
-                  <div class="chart-progress" data-color="primary" data-series="65"></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="d-flex justify-content-start align-items-center">
-                    <div class="avatar me-3">
-                      <img src="../../assets/img/avatars/8.png" alt="Avatar" class="rounded-circle" />
+                  </td>
+                  <td><span class="badge bg-label-danger text-uppercase">Bitbank</span></td>
+                  <td><span class="fw-medium">320/440</span></td>
+                  <td>
+                    <div class="chart-progress" data-color="danger" data-series="85"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="avatar me-3">
+                        <span class="avatar-initial rounded-circle bg-label-warning">AM</span>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <h6 class="mb-0 text-truncate">Adrian McGuire</h6>
+                        <small class="text-truncate text-body">PHP Developer</small>
+                      </div>
                     </div>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-0 text-truncate">Emma Bowen</h6>
-                      <small class="text-truncate text-body">UI/UX Designer</small>
+                  </td>
+                  <td><span class="badge bg-label-warning text-uppercase">Payers</span></td>
+                  <td><span class="fw-medium">50/82</span></td>
+                  <td>
+                    <div class="chart-progress" data-color="warning" data-series="73"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="avatar me-3">
+                        <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
+                      </div>
+                      <div class="d-flex flex-column">
+                        <h6 class="mb-0 text-truncate">Alma Gonzalez</h6>
+                        <small class="text-truncate text-body">Product Manager</small>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td><span class="badge bg-label-danger text-uppercase">Bitbank</span></td>
-                <td><span class="fw-medium">320/440</span></td>
-                <td>
-                  <div class="chart-progress" data-color="danger" data-series="85"></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="d-flex justify-content-start align-items-center">
-                    <div class="avatar me-3">
-                      <span class="avatar-initial rounded-circle bg-label-warning">AM</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-0 text-truncate">Adrian McGuire</h6>
-                      <small class="text-truncate text-body">PHP Developer</small>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="badge bg-label-warning text-uppercase">Payers</span></td>
-                <td><span class="fw-medium">50/82</span></td>
-                <td>
-                  <div class="chart-progress" data-color="warning" data-series="73"></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="d-flex justify-content-start align-items-center">
-                    <div class="avatar me-3">
-                      <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
-                    </div>
-                    <div class="d-flex flex-column">
-                      <h6 class="mb-0 text-truncate">Alma Gonzalez</h6>
-                      <small class="text-truncate text-body">Product Manager</small>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="badge bg-label-info text-uppercase">Brandi</span></td>
-                <td><span class="fw-medium">98/260</span></td>
-                <td>
-                  <div class="chart-progress" data-color="info" data-series="61"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
+                  <td><span class="badge bg-label-info text-uppercase">Brandi</span></td>
+                  <td><span class="fw-medium">98/260</span></td>
+                  <td>
+                    <div class="chart-progress" data-color="info" data-series="61"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-    <!--/ Team Members -->
+      <!--/ Team Members --> --}}
   </div>
 @endsection
 
@@ -569,7 +556,78 @@ function trendIcon($value) {
     };
 
     // Initialize the chart
+
+document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('lineChart').getContext('2d');
-    new Chart(ctx, config);
-  </script>
+
+    const lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+        labels: @json($labels).map(date => {
+                const d = new Date(date);
+                return d.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            }),            
+            datasets: [
+                {
+                    label: 'Jumlah Order',
+                    data: @json($jumlahOrderPerHari),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Penjualan Kotor',
+                    data: @json($penjualanKotorPerHari),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Penjualan Bersih',
+                    data: @json($penjualanBersihPerHari),
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: 90,
+                        minRotation: 45,
+                        autoSkip: true,
+                        maxTicksLimit: 15
+                    }
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});  
+</script>
 @endpush

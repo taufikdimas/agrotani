@@ -38,7 +38,7 @@
                 <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column align-items-xl-center align-items-md-start align-items-sm-center align-items-start">
                     <div class="mb-xl-0 mb-6 text-heading">
                     <div class="d-flex svg-illustration mb-6 gap-2 align-items-center">
-                        <img src="{{ asset('storage/' . $companyInfo['companyLogo']) }}" alt="Logo Perusahaan" style="width: 40px">
+                       <img src="{{ asset($companyInfo['companyLogo']) }}" alt="Logo Perusahaan" style="width: 40px">
 
                         <span class="app-brand-text demo fw-bold ms-50 lh-1">
                             {{ $companyInfo['companyName'] ?? 'Nama Perusahaan Default' }}
