@@ -1,6 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
+@if(session('low_stock_notifications'))
+    <div class="alert alert-warning">
+        <h5><i class="icon fas fa-exclamation-triangle"></i> Peringatan Stok Minimum!</h5>
+        @foreach(session('low_stock_notifications') as $product)
+            <p>
+                Produk <a href="{{ $product['url'] }}">{{ $product['nama_produk'] }}</a> 
+                stok mencapai minimum. 
+                Stok: {{ $product['stok'] }} (Minimum: {{ $product['min_stok'] }})
+            </p>
+        @endforeach
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 {{-- @dd($marketing->toArray()) --}}
     <style>
         .select2-container .select2-selection--single {
@@ -541,24 +565,32 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        console.log(response);
                         if (response.status) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
+                            // Cek stok minimum
+                            if (response.low_stock_notifications && response.low_stock_notifications.length > 0) {
+                                let notifList = response.low_stock_notifications.map(item => 
+                                    `<li><a href="${item.url}" target="_blank">${item.nama_produk}</a> (Stok: ${item.stok}, Minimum: ${item.min_stok})</li>`
+                                ).join('');
+
+                                Swal.fire({
+                                    title: 'Peringatan Stok Minimum!',
+                                    html: `<ul style="text-align: left;">${notifList}</ul>`,
+                                    icon: 'warning',
+                                    confirmButtonText: 'Lanjutkan'
+                                }).then(() => {
                                     window.location.href = '/penjualan';
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Gagal!',
-                                text: response.message || 'Data gagal diubah.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Data penjualan berhasil diubah', // Ubah ini
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    window.location.href = '/penjualan';
+                                });
+                            }
                         }
                     },
                     error: function(xhr) {

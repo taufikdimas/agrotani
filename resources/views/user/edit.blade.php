@@ -33,6 +33,12 @@
                     </div>
 
                     <div class="form-group mb-3">
+                        <label>Email</label>
+                        <input type="email" name="email" id="edit_email" class="form-control" value="{{ $user->email ?? '' }}" required>
+                        <small id="error-edit_email" class="error-text form-text text-danger"></small>
+                    </div>
+
+                    <div class="form-group mb-3">
                         <label>Username</label>
                         <input type="text" name="username" id="edit_username" class="form-control" value="{{ $user->username }}" required>
                         <small id="error-edit_username" class="error-text form-text text-danger"></small>

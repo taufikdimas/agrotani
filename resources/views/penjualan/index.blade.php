@@ -292,7 +292,7 @@
                             </div>
                         </div>
                         <div class="card-footer text-end">
-                            <a href="{{ url('penjualan/' . $penjualan['penjualan_id'] . '/edit') }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ url('penjualan/edit/' . $penjualan['penjualan_id']) }}" class="btn btn-primary">Edit</a>
                             <a href="javascript:void(0);" onclick="modalAction('{{ url('penjualan/' . $penjualan['penjualan_id'] . '/delete') }}')" class="btn btn-danger">Hapus</a>
                         </div>
                     </div>

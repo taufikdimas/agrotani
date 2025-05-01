@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class DetailPiutang extends Model
 {
@@ -16,6 +17,24 @@ class DetailPiutang extends Model
         'unit_harga',
         'total_harga',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->created_by = Auth::user()->nama;
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+    }
 
     // Relasi ke model Piutang
     public function piutang()

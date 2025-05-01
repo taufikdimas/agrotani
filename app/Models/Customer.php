@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Customer extends Model
 {
@@ -17,6 +18,24 @@ class Customer extends Model
         'deleted_at',
     ];
     protected $primaryKey = 'customer_id';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->created_by = Auth::user()->nama;
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+    }
 
     // Relasi ke Penjualan
     public function penjualan()

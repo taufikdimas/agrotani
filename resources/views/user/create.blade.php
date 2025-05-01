@@ -14,6 +14,12 @@
                 </div>
 
                 <div class="form-group mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                    <small id="error-email" class="error-text form-text text-danger"></small>
+                </div>
+
+                <div class="form-group mb-3">
                     <label>Username</label>
                     <input type="text" name="username" id="username" class="form-control" required>
                     <small id="error-username" class="error-text form-text text-danger"></small>

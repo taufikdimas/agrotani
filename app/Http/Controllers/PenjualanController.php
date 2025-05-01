@@ -8,11 +8,15 @@ use App\Models\Customer;
 use App\Models\Cicilan;
 use App\Models\Produk;
 use App\Models\Stok;
+use App\Models\Setting;
 use App\Models\Marketing;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LowStockNotification; 
 
 class PenjualanController extends Controller
 {
@@ -223,6 +227,7 @@ class PenjualanController extends Controller
     public function update(Request $request, $id)
     {
         $penjualan = Penjualan::findOrFail($id);
+        $lowStockProducts = []; // Untuk menyimpan produk dengan stok minimum
 
         $rules = [
             'customer_id' => ['required', 'exists:customer,customer_id'],
@@ -236,100 +241,130 @@ class PenjualanController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validasi Gagal',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        if ($request->has('products')) {
-            $products = json_decode($request->products, true);
-            
-            $laba_bersih = 0;
-            foreach ($products as $product) {
-                $unit_harga = (int) str_replace(['.', 'Rp', ' '], '', $product['unit_harga']);
-                $hpp = (int) str_replace(['.', 'Rp', ' '], '', $product['hpp']);
-                $jumlah = (int) $product['jumlah'];
-                $total_harga = (int) str_replace(['.', 'Rp', ' '], '', $product['total_harga']);
-                
-                // Hitung total HPP untuk produk ini
-                $total_hpp = $hpp * $jumlah;
-                
-                // Hitung laba untuk produk ini (total harga - total HPP)
-                $laba_produk = $total_harga - $total_hpp;
-                
-                // Tambahkan ke laba bersih keseluruhan
-                $laba_bersih += $laba_produk;
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
             }
+
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
-        $dibayar = 0;
-        if ($request->status_pembayaran === 'Lunas') {
-            $dibayar = $request->grand_total;
-        } 
 
-        $penjualan->update([
-            'customer_id' => $request->customer_id,
-            'kode_transaksi' => $request->kode_transaksi,
-            'tanggal_transaksi' => $request->tanggal_transaksi,
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'status_pembayaran' => $request->status_pembayaran,
-            'status_order' => $request->status_order,
-            'marketing_id' => $request->marketing_id,
-            'total_harga' => $request->grand_total,
-            'laba_bersih' => $laba_bersih,
-            'dibayar' => $dibayar
-        ]);
+        DB::beginTransaction();
 
-
-        if ($request->status_pembayaran === 'Belum Lunas') {
-            $customer = Customer::find($request->customer_id);
-            if ($customer) {
-                $customer->hutang_customer += $request->grand_total;
-                $customer->save();
-            }
-        }
-
-        if ($request->has('products')) {
-            $products = json_decode($request->products, true);
-            
-            DetailPenjualan::where('penjualan_id', $penjualan->penjualan_id)->delete();
-            
-            foreach ($products as $product) {
-                $unit_harga = str_replace(['.', 'Rp', ' '], '', $product['unit_harga']);
-                $total_harga = str_replace(['.', 'Rp', ' '], '', $product['total_harga']);
+        try {
+            if ($request->has('products')) {
+                $products = json_decode($request->products, true);
                 
-                DetailPenjualan::create([
-                    'penjualan_id' => $penjualan->penjualan_id,
-                    'produk_id' => $product['produk_id'],
-                    'jumlah' => $product['jumlah'],
-                    'unit_harga' => $unit_harga,
-                    'total_harga' => $total_harga,
-                ]);
-
-                $produk = Produk::find($product['produk_id']);
-                if ($produk) {
-                    $produk->stok -= $product['jumlah'];
-                    $produk->stok_out += $product['jumlah']; 
-                    $produk->save();
+                $laba_bersih = 0;
+                foreach ($products as $product) {
+                    $unit_harga = (int) str_replace(['.', 'Rp', ' '], '', $product['unit_harga']);
+                    $hpp = (int) str_replace(['.', 'Rp', ' '], '', $product['hpp']);
+                    $jumlah = (int) $product['jumlah'];
+                    $total_harga = (int) str_replace(['.', 'Rp', ' '], '', $product['total_harga']);
                     
-                    Stok::create([
-                        'penjualan_id' => $id,
-                        'produk_id' => $product['produk_id'],
-                        'kategori' => 'out',
-                        'jumlah' => $product['jumlah'],
-                        'deskripsi' => 'Penjualan ' . $penjualan->kode_transaksi,
-                    ]);
+                    $total_hpp = $hpp * $jumlah;
+                    $laba_produk = $total_harga - $total_hpp;
+                    $laba_bersih += $laba_produk;
                 }
             }
-        }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Data penjualan berhasil diubah',
-            'data' => $penjualan,
-        ]);
+            $dibayar = 0;
+            if ($request->status_pembayaran === 'Lunas') {
+                $dibayar = $request->grand_total;
+            } 
+
+            $penjualan->update([
+                'customer_id' => $request->customer_id,
+                'kode_transaksi' => $request->kode_transaksi,
+                'tanggal_transaksi' => $request->tanggal_transaksi,
+                'metode_pembayaran' => $request->metode_pembayaran,
+                'status_pembayaran' => $request->status_pembayaran,
+                'status_order' => $request->status_order,
+                'marketing_id' => $request->marketing_id,
+                'total_harga' => $request->grand_total,
+                'laba_bersih' => $laba_bersih,
+                'dibayar' => $dibayar
+            ]);
+
+            if ($request->status_pembayaran === 'Belum Lunas') {
+                $customer = Customer::find($request->customer_id);
+                if ($customer) {
+                    $customer->hutang_customer += $request->grand_total;
+                    $customer->save();
+                }
+            }
+
+            if ($request->has('products')) {
+                $products = json_decode($request->products, true);
+                
+                DetailPenjualan::where('penjualan_id', $penjualan->penjualan_id)->delete();
+                
+                foreach ($products as $product) {
+                    $unit_harga = str_replace(['.', 'Rp', ' '], '', $product['unit_harga']);
+                    $total_harga = str_replace(['.', 'Rp', ' '], '', $product['total_harga']);
+                    
+                    DetailPenjualan::create([
+                        'penjualan_id' => $penjualan->penjualan_id,
+                        'produk_id' => $product['produk_id'],
+                        'jumlah' => $product['jumlah'],
+                        'unit_harga' => $unit_harga,
+                        'total_harga' => $total_harga,
+                    ]);
+
+                    $produk = Produk::find($product['produk_id']);
+                    if ($produk) {
+                        $produk->stok -= $product['jumlah'];
+                        $produk->stok_out += $product['jumlah'];
+                        $produk->save();
+                        
+                        // Cek stok minimum
+                        if ($produk->stok <= $produk->min_stok) {
+                            $lowStockProducts[] = [
+                                'nama_produk' => $produk->nama_produk,
+                                'stok' => $produk->stok,
+                                'min_stok' => $produk->min_stok,
+                                'kode_produk' => $produk->kode_produk
+                            ];
+                        }
+                        
+                        Stok::create([
+                            'penjualan_id' => $id,
+                            'produk_id' => $product['produk_id'],
+                            'kategori' => 'out',
+                            'jumlah' => $product['jumlah'],
+                            'deskripsi' => 'Penjualan ' . $penjualan->kode_transaksi,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            // Tambahkan notifikasi jika ada produk dengan stok minimum
+            if (count($lowStockProducts) > 0) {
+                $this->sendLowStockEmail($lowStockProducts);
+            }
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data penjualan berhasil diubah',
+                    'low_stock_notifications' => $lowStockProducts
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal mengubah data: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
 
@@ -339,6 +374,39 @@ class PenjualanController extends Controller
         $penjualan = Penjualan::findOrFail($id);
 
         return view('penjualan.confirm', ['penjualan' => $penjualan]);
+    }
+
+    protected function sendLowStockEmail(array $lowStockProducts)
+    {
+        $recipients = User::where('role', 'Super Admin')
+                        ->pluck('email')
+                        ->filter() // Ini akan menghapus nilai null/empty
+                        ->toArray();
+        
+        \Log::info('Recipients: ' . implode(', ', $recipients));
+
+        if (empty($recipients)) {
+            \Log::warning('No recipients found for low stock notification');
+            return;
+        }
+        \Log::info('Products: ' . print_r($lowStockProducts, true));
+
+        $emailData = [
+            'products' => $lowStockProducts,
+            'date' => now()->format('d/m/Y H:i'),
+        ];
+
+        try {
+            Mail::to($recipients)
+                ->send(new \App\Mail\LowStockNotification($emailData));
+                
+            \Log::info('Low stock email sent to: '.implode(', ', $recipients));
+            \Log::info('Email Data: ', $emailData);
+        } catch (\Exception $e) {
+            \Log::error('Failed to send low stock email: '.$e->getMessage());
+            // Tambahkan log lebih detail
+            \Log::error('Exception trace: ', $e->getTrace());
+        }
     }
 
     public function delete($id)
@@ -408,7 +476,23 @@ class PenjualanController extends Controller
             'cicilan'
         ])->findOrFail($id);
 
-        return view('penjualan.invoice', compact('penjualan'));
+        // Ambil data company dari settings
+        $companySettings = Setting::where('group', 'company')
+            ->get()
+            ->pluck('value', 'key');
+
+        // Buat array untuk data company
+        $companyInfo = [
+            'companyLogo' => $companySettings['company_logo'] ?? null,
+            'companyName' => $companySettings['company_name'] ?? null,
+            'companyAddress' => $companySettings['company_address'] ?? null,
+            'companyPhone' => $companySettings['company_phone'] ?? null,
+            'companyEmail' => $companySettings['company_email'] ?? null,
+            'companyCity' => $companySettings['company_city'] ?? null,
+        ];
+
+        return view('penjualan.invoice', compact('penjualan', 'companyInfo'));
     }
+
 
 }

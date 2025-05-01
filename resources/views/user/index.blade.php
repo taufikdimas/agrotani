@@ -34,7 +34,7 @@
                     <tr>
                         <th>Nama</th>
                         <th>Username</th>
-                        <th>Password</th>
+                        <th>Email</th>n
                         <th>Role</th>
                         <th>Aksi</th>
                     </tr>
@@ -86,7 +86,7 @@
                                 <tr>
                                     <td>${user.nama}</td>
                                     <td>${user.username}</td>
-                                    <td>••••••••</td>
+                                    <td>${user.email}</td>
                                     <td>${user.role}</td>
                                     <td>
                                         <div class="dropdown">

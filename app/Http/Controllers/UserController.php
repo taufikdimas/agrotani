@@ -48,6 +48,7 @@ class UserController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
             'role'     => ['required', 'in:Super Admin,User'],
+            'email'    => ['nullable', 'string', 'email', 'max:255'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -66,6 +67,7 @@ class UserController extends Controller
                 'username' => $request->username,
                 'password' => Hash::make($request->password),
                 'role'     => $request->role,
+                'email'    => $request->email,
             ]);
 
             return response()->json([
@@ -97,6 +99,7 @@ class UserController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $id],
             'password' => ['nullable', 'string', 'min:6'],
             'role'     => ['required', 'in:Super Admin,User'],
+            'email'    => ['nullable', 'string', 'email', 'max:255'],
         ];
 
         $validator = Validator::make($request->all(), $rules);

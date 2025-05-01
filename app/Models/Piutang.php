@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Piutang extends Model
 {
@@ -16,6 +17,24 @@ class Piutang extends Model
         'jumlah',
         'tagihan',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (Auth::check()) {
+                $model->created_by = Auth::user()->nama;
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+
+        static::updating(function ($model) {
+            if (Auth::check()) {
+                $model->updated_by = Auth::user()->nama;
+            }
+        });
+    }
 
     // Relasi opsional ke model produk
     public function produk()

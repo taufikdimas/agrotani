@@ -114,7 +114,7 @@ class ProdukController extends Controller
 
     public function produk_list()
     {
-        $produk = Produk::select('produk_id', 'nama_produk', 'harga')->get();
+        $produk = Produk::select('produk_id', 'nama_produk', 'harga', 'hpp')->get();
         return response()->json([
             'success' => true,
             'data'    => $produk,
@@ -122,7 +122,7 @@ class ProdukController extends Controller
     }
     public function list(Request $request)
     {
-        $data = Produk::select(['produk_id', 'kode_produk', 'nama_produk', 'deskripsi', 'harga', 'stok', 'min_stok', 'created_at', 'updated_at']);
+        $data = Produk::select(['produk_id', 'kode_produk', 'nama_produk', 'deskripsi', 'harga', 'stok', 'hpp', 'min_stok', 'created_at', 'updated_at']);
 
         if ($request->search_produk) {
             $data->where('nama_produk', 'like', '%' . $request->search_produk . '%');
